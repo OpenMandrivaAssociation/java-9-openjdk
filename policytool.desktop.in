@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=OpenJDK 9 Policy Tool #ARCH#
+Comment=Manage OpenJDK policy files #ARCH#
+Exec=#JRE_HOME#/policytool
+Icon=java-9
+Terminal=false
+Type=Application
+StartupWMClass=sun-security-tools-PolicyTool
+Categories=Settings;Java;
+Version=1.0
