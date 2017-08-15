@@ -670,7 +670,7 @@ exit 0
 
 %global files_src() %{expand:
 %defattr(-,root,root,-)
-%doc README.src
+%doc README.md
 %{_jvmdir}/%{sdkdir %%1}/lib/src.zip
 }
 
@@ -869,7 +869,7 @@ URL:      http://openjdk.java.net/
 Source0:  jdk9-jdk%{majorver}-jdk-%{majorver}+%{buildver}.tar.xz
 
 # Custom README for -src subpackage
-Source2:  README.src
+Source2:  README.md
 
 # Use 'generate_tarballs.sh' to generate the following tarballs
 # They are based on code contained in the IcedTea7 project.
