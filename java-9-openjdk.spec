@@ -1119,7 +1119,6 @@ The OpenJDK API documentation.
 Summary: OpenJDK API Documentation compressed in single archive
 Group:   Documentation
 Requires: javapackages-tools
-BuildArch: noarch
 
 %{java_javadoc_rpo %{nil}}
 
@@ -1132,6 +1131,7 @@ The OpenJDK API documentation compressed in single archive.
 Summary: OpenJDK API Documentation %{for_debug}
 Group:   Documentation
 Requires: javapackages-tools
+BuildArch: noarch
 
 %{java_javadoc_rpo %{debug_suffix_unquoted}}
 
@@ -1144,7 +1144,6 @@ The OpenJDK API documentation %{for_debug}.
 Summary: OpenJDK API Documentation compressed in single archive %{for_debug}
 Group:   Documentation
 Requires: javapackages-tools
-BuildArch: noarch
 
 %{java_javadoc_rpo %{debug_suffix_unquoted}}
 
