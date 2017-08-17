@@ -1106,7 +1106,6 @@ The OpenJDK source bundle %{for_debug}.
 Summary: OpenJDK API Documentation
 Group:   Documentation
 Requires: javapackages-tools
-BuildArch: noarch
 
 %{java_javadoc_rpo %{nil}}
 
@@ -1131,7 +1130,6 @@ The OpenJDK API documentation compressed in single archive.
 Summary: OpenJDK API Documentation %{for_debug}
 Group:   Documentation
 Requires: javapackages-tools
-BuildArch: noarch
 
 %{java_javadoc_rpo -- %{debug_suffix_unquoted}}
 
