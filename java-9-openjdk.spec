@@ -96,7 +96,7 @@
 %global archinstall ppc64le
 %endif
 %ifarch %{ix86}
-%global archinstall i386
+%global archinstall i686
 %endif
 %ifarch ia64
 %global archinstall ia64
