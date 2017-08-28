@@ -848,7 +848,7 @@ Provides: java-%{javaver}-%{origin}-accessiblity = %{epoch}:%{version}-%{release
 
 Name:    java-%{majorver}-%{origin}
 Version: %{newjavaver}.%{buildver}
-Release: 1%{?dist}
+Release: 2%{?dist}
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -1788,6 +1788,10 @@ require "copy_jdk_configs.lua"
 
 
 %changelog
+* Tue Aug 29 2017 Michal Vala  <mvala@redhat.com> - 1:1.9.0.0-3.b163
+- changed  archinstall to i686
+- added ownership of lib/client/
+
 * Tue Apr 18 2017 Jiri Vanek <jvanek@redhat.com> - 1:1.9.0.0-2.b163
 - sync with openjdk8 rpms
 
