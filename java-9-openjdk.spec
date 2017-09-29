@@ -848,7 +848,7 @@ Provides: java-%{javaver}-%{origin}-accessiblity = %{epoch}:%{version}-%{release
 
 Name:    java-%{majorver}-%{origin}
 Version: %{newjavaver}.%{buildver}
-Release: 2%{?dist}
+Release: 3%{?dist}
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -883,7 +883,7 @@ Source9: jconsole.desktop.in
 Source10: policytool.desktop.in
 
 # nss configuration file
-Source11: nss.cfg
+Source11: nss.cfg.in
 
 # Removed libraries that we link instead
 Source12: remove-intree-libraries.sh
@@ -924,6 +924,9 @@ Patch104: bootcycle_jobs.patch
 
 Patch400: ppc_stack_overflow_fix.patch 
 Patch401: aarch64BuildFailure.patch
+
+# Non-OpenJDK fixes
+Patch1000: enableCommentedOutSystemNss.patch
 
 BuildRequires: autoconf
 BuildRequires: automake
@@ -1231,6 +1234,7 @@ sh %{SOURCE12}
 %patch401 -p1
 popd
 
+%patch1000
 
 # Extract systemtap tapsets
 %if %{with_systemtap}
@@ -1272,6 +1276,8 @@ for file in %{SOURCE9} %{SOURCE10} ; do
 done
 done
 
+# Setup nss.cfg
+sed -e s:@NSS_LIBDIR@:%{NSS_LIBDIR}:g %{SOURCE11} > nss.cfg
 
 %build
 # How many cpu's do we have?
@@ -1372,7 +1378,7 @@ popd >& /dev/null
 export JAVA_HOME=$(pwd)/%{buildoutputdir $suffix}/images/%{jdkimage}
 
 # Install nss.cfg right away as we will be using the JRE above
-install -m 644 %{SOURCE11} $JAVA_HOME/conf/security/
+install -m 644 nss.cfg $JAVA_HOME/conf/security/
 
 # Use system-wide tzdata
 rm $JAVA_HOME/lib/tzdb.dat
