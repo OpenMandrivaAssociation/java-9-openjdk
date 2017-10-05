@@ -165,6 +165,8 @@
 #main id and dir of this jdk
 %define uniquesuffix()        %{expand:%{fullversion}.%{_arch}%{?1}}
 
+%global etcjavasubdir     %{_sysconfdir}/java/java-%{javaver}-%{origin}
+%define etcjavadir()      %{expand:%{etcjavasubdir}/%{uniquesuffix} -- %{?1}}
 # Standard JPackage directories and symbolic links.
 %define sdkdir()        %{expand:%{uniquesuffix -- %{?1}}}
 %define jrelnk()        %{expand:jre-%{javaver}-%{origin}-%{version}-%{release}.%{_arch}%{?1}}
@@ -472,10 +474,6 @@ exit 0
 %{_jvmdir}/%{sdkdir -- %{?1}}/release
 %{_jvmdir}/%{jrelnk -- %{?1}}
 %dir %{_jvmdir}/%{sdkdir -- %{?1}}/bin
-%dir %{_jvmdir}/%{sdkdir -- %{?1}}/conf
-%dir %{_jvmdir}/%{sdkdir -- %{?1}}/conf/management
-%dir %{_jvmdir}/%{sdkdir -- %{?1}}/conf/security
-%dir %{_jvmdir}/%{sdkdir -- %{?1}}/lib/security
 %{_jvmdir}/%{sdkdir -- %{?1}}/bin/appletviewer
 %{_jvmdir}/%{sdkdir -- %{?1}}/bin/idlj
 %{_jvmdir}/%{sdkdir -- %{?1}}/bin/java
@@ -531,29 +529,6 @@ exit 0
 %{_jvmdir}/%{sdkdir -- %{?1}}/lib/libverify.so
 %{_jvmdir}/%{sdkdir -- %{?1}}/lib/libzip.so
 %{_jvmdir}/%{sdkdir -- %{?1}}/lib/libsunec.so
-%config(noreplace) %{_jvmdir}/%{sdkdir -- %{?1}}/lib/security/default.policy
-%config(noreplace) %{_jvmdir}/%{sdkdir -- %{?1}}/lib/security/blacklisted.certs
-%dir %{_jvmdir}/%{sdkdir -- %{?1}}/conf/security/policy
-%dir %{_jvmdir}/%{sdkdir -- %{?1}}/conf/security/policy/limited
-%dir %{_jvmdir}/%{sdkdir -- %{?1}}/conf/security/policy/unlimited
-%config(noreplace) %{_jvmdir}/%{sdkdir -- %{?1}}/conf/security/policy/limited/exempt_local.policy
-%config(noreplace) %{_jvmdir}/%{sdkdir -- %{?1}}/conf/security/policy/limited/default_local.policy
-%config(noreplace) %{_jvmdir}/%{sdkdir -- %{?1}}/conf/security/policy/limited/default_US_export.policy
-%config(noreplace) %{_jvmdir}/%{sdkdir -- %{?1}}/conf/security/policy/unlimited/default_local.policy
-%config(noreplace) %{_jvmdir}/%{sdkdir -- %{?1}}/conf/security/policy/unlimited/default_US_export.policy
-%{_jvmdir}/%{sdkdir -- %{?1}}/conf/security/policy/README.txt
-#FIXME is the blacklisted certs really supposed to be config(noreplace)?
-%config(noreplace) %{_jvmdir}/%{sdkdir -- %{?1}}/conf/security/java.policy
-%config(noreplace) %{_jvmdir}/%{sdkdir -- %{?1}}/conf/security/java.security
-%config(noreplace) %{_jvmdir}/%{sdkdir -- %{?1}}/conf/logging.properties
-%config(noreplace) %{_jvmdir}/%{sdkdir -- %{?1}}/conf/security/nss.cfg
-#TODO which of these should be noreplace? all of them?
-%config(noreplace) %{_jvmdir}/%{sdkdir -- %{?1}}/conf/management/jmxremote.access
-%config %{_jvmdir}/%{sdkdir -- %{?1}}/conf/management/jmxremote.password.template
-%config(noreplace) %{_jvmdir}/%{sdkdir -- %{?1}}/conf/management/management.properties
-%config(noreplace) %{_jvmdir}/%{sdkdir -- %{?1}}/conf/net.properties
-%config(noreplace) %{_jvmdir}/%{sdkdir -- %{?1}}/conf/sound.properties
-%config %{_jvmdir}/%{sdkdir -- %{?1}}/conf/accessibility.properties
 %{_mandir}/man1/appletviewer-%{uniquesuffix -- %{?1}}.1*
 %{_mandir}/man1/idlj-%{uniquesuffix -- %{?1}}.1*
 %{_mandir}/man1/java-%{uniquesuffix -- %{?1}}.1*
@@ -578,6 +553,34 @@ exit 0
 %attr(664, root, root) %ghost %{_jvmdir}/%{sdkdir -- %{?1}}/lib/client/classes.jsa
 %endif
 %endif
+%dir %{etcjavadir -- %{?1}}/lib
+%dir %{etcjavadir -- %{?1}}/lib/security
+%dir %{etcjavadir -- %{?1}}/conf
+%dir %{etcjavadir -- %{?1}}/conf/management
+%dir %{etcjavadir -- %{?1}}/conf/security
+%dir %{etcjavadir -- %{?1}}/conf/security/policy
+%dir %{etcjavadir -- %{?1}}/conf/security/policy/limited
+%dir %{etcjavadir -- %{?1}}/conf/security/policy/unlimited
+%config(noreplace) %{etcjavadir -- %{?1}}/lib/security/default.policy
+%config(noreplace) %{etcjavadir -- %{?1}}/lib/security/blacklisted.certs
+%config(noreplace) %{etcjavadir -- %{?1}}/conf/security/policy/limited/exempt_local.policy
+%config(noreplace) %{etcjavadir -- %{?1}}/conf/security/policy/limited/default_local.policy
+%config(noreplace) %{etcjavadir -- %{?1}}/conf/security/policy/limited/default_US_export.policy
+%config(noreplace) %{etcjavadir -- %{?1}}/conf/security/policy/unlimited/default_local.policy
+%config(noreplace) %{etcjavadir -- %{?1}}/conf/security/policy/unlimited/default_US_export.policy
+ %{etcjavadir -- %{?1}}/conf/security/policy/README.txt
+%config(noreplace) %{etcjavadir -- %{?1}}/conf/security/java.policy
+%config(noreplace) %{etcjavadir -- %{?1}}/conf/security/java.security
+%config(noreplace) %{etcjavadir -- %{?1}}/conf/logging.properties
+%config(noreplace) %{etcjavadir -- %{?1}}/conf/security/nss.cfg
+%config(noreplace) %{etcjavadir -- %{?1}}/conf/management/jmxremote.access
+%config  %{etcjavadir -- %{?1}}/conf/management/jmxremote.password.template
+%config(noreplace) %{etcjavadir -- %{?1}}/conf/management/management.properties
+%config(noreplace) %{etcjavadir -- %{?1}}/conf/net.properties
+%config(noreplace) %{etcjavadir -- %{?1}}/conf/sound.properties
+%config  %{etcjavadir -- %{?1}}/conf/accessibility.properties
+%{_jvmdir}/%{sdkdir -- %{?1}}/conf
+%{_jvmdir}/%{sdkdir -- %{?1}}/lib/security
 }
 
 %define files_devel() %{expand:
@@ -690,7 +693,7 @@ exit 0
 %define files_accessibility() %{expand:
 #%{_jvmdir}/%{sdkdir -- %{?1}}/lib/%{archinstall}/libatk-wrapper.so
 #%{_jvmdir}/%{sdkdir -- %{?1}}/lib/ext/java-atk-wrapper.jar
-#%{_jvmdir}/%{sdkdir -- %{?1}}/conf/accessibility.properties
+#%{_jvmdir}/%{etcjavadir -- %{?1}}/conf/accessibility.properties
 }
 
 # not-duplicated requires/provides/obsolate for normal/debug packages
@@ -730,7 +733,7 @@ Requires: lksctp-tools%{?_isa}
 Requires: nss%{?_isa} %{NSS_BUILDTIME_VERSION}
 Requires: nss-softokn%{?_isa} %{NSSSOFTOKN_BUILDTIME_VERSION}
 # tool to copy jdk's configs - should be Recommends only, but then only dnf/yum eforce it, not rpm transaction and so no configs are persisted when pure rpm -u is run. I t may be consiedered as regression
-Requires:	copy-jdk-configs >= 2.2
+Requires:	copy-jdk-configs >= 3.2
 OrderWithRequires: copy-jdk-configs
 # Post requires alternatives to install tool alternatives.
 Requires(post):   %{_sbindir}/alternatives
@@ -848,7 +851,7 @@ Provides: java-%{javaver}-%{origin}-accessiblity = %{epoch}:%{version}-%{release
 
 Name:    java-%{majorver}-%{origin}
 Version: %{newjavaver}.%{buildver}
-Release: 3%{?dist}
+Release: 4%{?dist}
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -1603,6 +1606,19 @@ find $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/demo \
     echo "" >> accessibility.properties
   popd
 
+# moving configfiles to /etc
+mkdir -p $RPM_BUILD_ROOT/%{etcjavadir $suffix}
+mkdir -p $RPM_BUILD_ROOT/%{etcjavadir $suffix}/lib
+mv $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir $suffix}/conf/  $RPM_BUILD_ROOT/%{etcjavadir $suffix}
+mv $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir $suffix}/lib/security  $RPM_BUILD_ROOT/%{etcjavadir $suffix}/lib
+pushd $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir $suffix}
+  ln -s %{etcjavadir $suffix}/conf  ./conf
+popd
+pushd mkdir -p $RPM_BUILD_ROOT/%{etcjavadir $suffix}/lib
+  ln -s %{etcjavadir $suffix}/lib/security  ./security
+popd
+# end moving files to /etc
+
 # end, dual install
 done
 
@@ -1794,6 +1810,9 @@ require "copy_jdk_configs.lua"
 
 
 %changelog
+* Thu Oct 05 2017 Jiri Vanek <jvanek@redhat.com> - 1:1.9.0.0-4.b163
+- config files moved to etc
+
 * Tue Aug 29 2017 Michal Vala  <mvala@redhat.com> - 1:1.9.0.0-3.b163
 - changed  archinstall to i686
 - added ownership of lib/client/
