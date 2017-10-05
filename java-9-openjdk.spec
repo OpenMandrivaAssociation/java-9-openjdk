@@ -571,7 +571,7 @@ exit 0
 %{_mandir}/man1/policytool-%{uniquesuffix -- %{?1}}.1*
 %{_jvmdir}/%{sdkdir -- %{?1}}/lib/audio/
 %{_jvmdir}/%{sdkdir -- %{?1}}/lib/server/
-%{_jvmdir}/%{sdkdir -- %{?1}}/lib/client/
+%ghost %{_jvmdir}/%{sdkdir -- %{?1}}/lib/client/
 %ifarch %{jit_arches}
 %ifnarch %{power64}
 %attr(664, root, root) %ghost %{_jvmdir}/%{sdkdir -- %{?1}}/lib/server/classes.jsa
