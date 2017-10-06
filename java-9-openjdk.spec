@@ -1614,7 +1614,7 @@ mv $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir $suffix}/lib/security  $RPM_BUILD_ROOT/%{
 pushd $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir $suffix}
   ln -s %{etcjavadir $suffix}/conf  ./conf
 popd
-pushd $RPM_BUILD_ROOT/%{etcjavadir $suffix}/lib
+pushd $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir $suffix}/lib
   ln -s %{etcjavadir $suffix}/lib/security  ./security
 popd
 # end moving files to /etc
