@@ -166,7 +166,7 @@
 %define uniquesuffix()        %{expand:%{fullversion}.%{_arch}%{?1}}
 
 %global etcjavasubdir     %{_sysconfdir}/java/java-%{javaver}-%{origin}
-%define etcjavadir()      %{expand:%{etcjavasubdir}/%{uniquesuffix} -- %{?1}}
+%define etcjavadir()      %{expand:%{etcjavasubdir}/%{uniquesuffix -- %{?1}}}
 # Standard JPackage directories and symbolic links.
 %define sdkdir()        %{expand:%{uniquesuffix -- %{?1}}}
 %define jrelnk()        %{expand:jre-%{javaver}-%{origin}-%{version}-%{release}.%{_arch}%{?1}}
