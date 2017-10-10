@@ -528,7 +528,6 @@ exit 0
 %{_jvmdir}/%{sdkdir -- %{?1}}/lib/libunpack.so
 %{_jvmdir}/%{sdkdir -- %{?1}}/lib/libverify.so
 %{_jvmdir}/%{sdkdir -- %{?1}}/lib/libzip.so
-%{_jvmdir}/%{sdkdir -- %{?1}}/lib/libsunec.so
 %{_mandir}/man1/appletviewer-%{uniquesuffix -- %{?1}}.1*
 %{_mandir}/man1/idlj-%{uniquesuffix -- %{?1}}.1*
 %{_mandir}/man1/java-%{uniquesuffix -- %{?1}}.1*
