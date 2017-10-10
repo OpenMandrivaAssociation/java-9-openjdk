@@ -114,22 +114,20 @@ done
 if [ -d jdk ]; then 
 echo "Removing EC source code we don't build"
 
-#mv -v jdk/src/share/native/sun/security/ec/impl/ecc_impl.h .
-#rm -vrf jdk/src/share/native/sun/security/ec/impl
-#mkdir jdk/src/share/native/sun/security/ec/impl
-#mv -v ecc_impl.h jdk/src/share/native/sun/security/ec/impl
+CRYPTO_PATH=jdk/src/jdk.crypto.ec/share/native/libsunec/impl
+rm -vrf $CRYPTO_PATH
 
 echo "Syncing EC list with NSS"
-#if [ "x$PR2126" = "x" ] ; then
+if [ "x$PR2126" = "x" ] ; then
+# orriginally for 8:
 # get pr2126.patch (from http://icedtea.classpath.org/hg/icedtea?cmd=changeset;node=8d2c9a898f50) from most correct tag
 # Do not push it or publish it (see http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=2126)
-#    wget http://icedtea.classpath.org/hg/icedtea8/raw-file/tip/patches/pr2126.patch
-#    patch -Np1 < pr2126.patch
-#    rm pr2126.patch
-#else
-#    echo "Applying ${PR2126}"
-#    patch -Np1 < $PR2126
-#fi;
+# there is currnetly no "upstram version of this patch, hardcoding custom version
+    PR2126="../../pr2126-9.patch"
+fi;
+echo "Applying ${PR2126}"
+patch -Np1 < $PR2126
+
 fi
 find . -name '*.orig' -exec rm -vf '{}' ';'
 
