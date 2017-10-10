@@ -552,6 +552,7 @@ exit 0
 %attr(664, root, root) %ghost %{_jvmdir}/%{sdkdir -- %{?1}}/lib/client/classes.jsa
 %endif
 %endif
+%dir %{etcjavasubdir}
 %dir %{etcjavadir -- %{?1}}
 %dir %{etcjavadir -- %{?1}}/lib
 %dir %{etcjavadir -- %{?1}}/lib/security
@@ -851,7 +852,7 @@ Provides: java-%{javaver}-%{origin}-accessiblity = %{epoch}:%{version}-%{release
 
 Name:    java-%{majorver}-%{origin}
 Version: %{newjavaver}.%{buildver}
-Release: 8%{?dist}
+Release: 9%{?dist}
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -1810,6 +1811,9 @@ require "copy_jdk_configs.lua"
 
 
 %changelog
+* Tue Oct 10 2017 Jiri Vanek <jvanek@redhat.com> - 1:1.9.0.0-9.b163
+- now owning dir etcjavasubdir
+
 * Tue Oct 10 2017 Jiri Vanek <jvanek@redhat.com> - 1:1.9.0.0-8.b163
 - EC no longer built
 
