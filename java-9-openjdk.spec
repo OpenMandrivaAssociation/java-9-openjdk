@@ -1810,7 +1810,7 @@ require "copy_jdk_configs.lua"
 
 
 %changelog
-* Fri Oct 10 2017 Jiri Vanek <jvanek@redhat.com> - 1:1.9.0.0-8.b163
+* Tue Oct 10 2017 Jiri Vanek <jvanek@redhat.com> - 1:1.9.0.0-8.b163
 - EC no longer built
 
 * Tue Oct 10 2017 Jiri Vanek <jvanek@redhat.com> - 1:1.9.0.0-7.b163
