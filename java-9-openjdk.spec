@@ -724,8 +724,8 @@ Provides: java-%{javaver}%{?1} = %{epoch}:%{version}-%{release}
 %define java_headless_rpo() %{expand:
 # Require /etc/pki/java/cacerts.
 Requires: ca-certificates
-# Require jpackage-utils for ownership of /usr/lib/jvm/
-Requires: jpackage-utils
+# Require javapackages-tools for ownership of /usr/lib/jvm/
+Requires: javapackages-tools
 # Require zoneinfo data provided by tzdata-java subpackage.
 Requires: tzdata-java >= 2015d
 # libsctp.so.1 is being `dlopen`ed on demand
