@@ -852,7 +852,7 @@ Provides: java-%{javaver}-%{origin}-accessiblity = %{epoch}:%{version}-%{release
 
 Name:    java-%{majorver}-%{origin}
 Version: %{newjavaver}.%{buildver}
-Release: 9%{?dist}
+Release: 10%{?dist}
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -871,7 +871,7 @@ URL:      http://openjdk.java.net/
 
 # Source from upstrem OpenJDK9 project. To regenerate, use
 # ./generate_source_tarball.sh jdk9 jdk9 jdk9-%%{buildver}
-Source0:  jdk9-jdk%{majorver}-jdk-%{majorver}+%{buildver}.tar.xz
+Source0:  jdk9-jdk%{majorver}-jdk-%{majorver}+%{buildver}-CPU.tar.xz
 
 # Custom README for -src subpackage
 Source2:  README.md
@@ -880,7 +880,7 @@ Source2:  README.md
 # They are based on code contained in the IcedTea7 project.
 
 # Systemtap tapsets. Zipped up to keep it small.
-Source8: systemtap-tapset-3.1.0.tar.xz
+Source8: systemtap-tapset-3.6.0pre02.tar.xz
 
 # Desktop files. Adapated from IcedTea.
 Source9: jconsole.desktop.in
@@ -1811,6 +1811,9 @@ require "copy_jdk_configs.lua"
 
 
 %changelog
+* Thu Oct 26 2017 Jiri Vanek <jvanek@redhat.com> - 1:1.9.0.0-10.b181
+- applied security patches
+
 * Tue Oct 10 2017 Jiri Vanek <jvanek@redhat.com> - 1:1.9.0.0-9.b163
 - now owning dir etcjavasubdir
 
