@@ -871,7 +871,7 @@ URL:      http://openjdk.java.net/
 
 # Source from upstrem OpenJDK9 project. To regenerate, use
 # ./generate_source_tarball.sh jdk9 jdk9 jdk9-%%{buildver}
-Source0:  jdk9-jdk%{majorver}-jdk-%{majorver}+%{buildver}-CPU3.tar.xz
+Source0:  jdk9-jdk%{majorver}-jdk-%{majorver}+%{buildver}-CPU4.tar.xz
 
 # Custom README for -src subpackage
 Source2:  README.md
