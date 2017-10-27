@@ -1810,6 +1810,10 @@ require "copy_jdk_configs.lua"
 
 
 %changelog
+* Fri Oct 27 2017 Jiri Vanek <jvanek@redhat.com> - 1:9.0.1.11-1
+- changed versioning
+- updated to latest usptream release
+
 * Thu Oct 26 2017 Jiri Vanek <jvanek@redhat.com> - 1:1.9.0.0-10.b181
 - applied security patches
 - added missing macro parameters dleimiters
