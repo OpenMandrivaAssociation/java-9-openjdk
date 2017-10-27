@@ -141,12 +141,12 @@
 
 # New Version-String scheme-style defines
 %global majorver 9
-%global securityver 0
+%global securityver 1
 
 # Standard JPackage naming and versioning defines.
 %global origin          openjdk
 %global minorver        0
-%global buildver        181
+%global buildver        11
 # priority must be 7 digits in total
 #setting to 1, so debug ones can have 0
 %global priority        00000%{minorver}1
@@ -850,7 +850,7 @@ Provides: java-%{javaver}-%{origin}-accessiblity = %{epoch}:%{version}-%{release
 
 Name:    java-%{majorver}-%{origin}
 Version: %{newjavaver}.%{buildver}
-Release: 10%{?dist}
+Release: 1%{?dist}
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -870,7 +870,7 @@ URL:      http://openjdk.java.net/
 
 # Source from upstrem OpenJDK9 project. To regenerate, use
 # ./generate_source_tarball.sh jdk9 jdk9 jdk9-%%{buildver}
-Source0:  jdk9-jdk%{majorver}-jdk-%{majorver}+%{buildver}-CPU4.tar.xz
+Source0:  jdk-updates-jdk%{majorver}u-jdk-%{newjavaver}+%{buildver}.tar.xz
 
 # Custom README for -src subpackage
 Source2:  README.md
