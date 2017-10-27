@@ -172,7 +172,7 @@
 %define jrelnk()        %{expand:jre-%{javaver}-%{origin}-%{version}-%{release}.%{_arch}%{?1}}
 
 %define sdkbindir()     %{expand:%{_jvmdir}/%{sdkdir -- %{?1}}/bin}
-%define jrebindir()     %{expand:%{_jvmdir}/%{sdkdir --  %{?1}}/bin}
+%define jrebindir()     %{expand:%{_jvmdir}/%{sdkdir -- %{?1}}/bin}
 
 %global rpm_state_dir %{_localstatedir}/lib/rpm-state/
 
@@ -254,12 +254,11 @@ alternatives \\
 # yes! (if not sdk)
 
 for X in %{origin} %{javaver} ; do
-  alternatives \\
-    --install %{_jvmdir}/jre-"$X" \\
-    jre_"$X" %{_jvmdir}/%{sdkdir -- %{?1}} $PRIORITY  --family %{name}.%{_arch}
+  alternatives --install %{_jvmdir}/jre-"$X" jre_"$X" %{_jvmdir}/%{sdkdir -- %{?1}} $PRIORITY --family %{name}.%{_arch}
 done
 
 update-alternatives --install %{_jvmdir}/jre-%{javaver}-%{origin} jre_%{javaver}_%{origin} %{_jvmdir}/%{jrelnk -- %{?1}} $PRIORITY  --family %{name}.%{_arch}
+
 
 update-desktop-database %{_datadir}/applications &> /dev/null || :
 /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
@@ -389,8 +388,7 @@ alternatives \\
 
 for X in %{origin} %{javaver} ; do
   alternatives \\
-    --install %{_jvmdir}/java-"$X" \\
-    java_sdk_"$X" %{_jvmdir}/%{sdkdir -- %{?1}} $PRIORITY  --family %{name}.%{_arch}
+    --install %{_jvmdir}/java-"$X" java_sdk_"$X" %{_jvmdir}/%{sdkdir -- %{?1}} $PRIORITY  --family %{name}.%{_arch}
 done
 
 update-alternatives --install %{_jvmdir}/java-%{javaver}-%{origin} java_sdk_%{javaver}_%{origin} %{_jvmdir}/%{sdkdir -- %{?1}} $PRIORITY  --family %{name}.%{_arch}
@@ -710,14 +708,14 @@ Provides: java-%{javaver}-%{origin} = %{epoch}:%{version}-%{release}
 
 # Standard JPackage base provides.
 Provides: jre-%{javaver}-%{origin}%{?1} = %{epoch}:%{version}-%{release}
-#Provides: jre-%{origin}%{?1} = %{epoch}:%{version}-%{release}
+Provides: jre-%{origin}%{?1} = %{epoch}:%{version}-%{release}
 Provides: jre-%{javaver}%{?1} = %{epoch}:%{version}-%{release}
 Provides: java-%{javaver}%{?1} = %{epoch}:%{version}-%{release}
-#Provides: jre = %{javaver}%{?1}
-#Provides: java-%{origin}%{?1} = %{epoch}:%{version}-%{release}
-#Provides: java%{?1} = %{epoch}:%{javaver}
+Provides: jre = %{javaver}%{?1}
+Provides: java-%{origin}%{?1} = %{epoch}:%{version}-%{release}
+Provides: java%{?1} = %{epoch}:%{javaver}
 # Standard JPackage extensions provides.
-#Provides: java-fonts%{?1} = %{epoch}:%{version}
+Provides: java-fonts%{?1} = %{epoch}:%{version}
 
 }
 
@@ -734,7 +732,7 @@ Requires: lksctp-tools%{?_isa}
 Requires: nss%{?_isa} %{NSS_BUILDTIME_VERSION}
 Requires: nss-softokn%{?_isa} %{NSSSOFTOKN_BUILDTIME_VERSION}
 # tool to copy jdk's configs - should be Recommends only, but then only dnf/yum eforce it, not rpm transaction and so no configs are persisted when pure rpm -u is run. I t may be consiedered as regression
-Requires:	copy-jdk-configs >= 3.2
+Requires:	copy-jdk-configs >= 3.3
 OrderWithRequires: copy-jdk-configs
 # Post requires alternatives to install tool alternatives.
 Requires(post):   %{_sbindir}/alternatives
@@ -747,23 +745,23 @@ Requires(postun):   chkconfig >= 1.7
 
 # Standard JPackage base provides.
 Provides: jre-%{javaver}-%{origin}-headless%{?1} = %{epoch}:%{version}-%{release}
-#Provides: jre-%{origin}-headless%{?1} = %{epoch}:%{version}-%{release}
+Provides: jre-%{origin}-headless%{?1} = %{epoch}:%{version}-%{release}
 Provides: jre-%{javaver}-headless%{?1} = %{epoch}:%{version}-%{release}
 Provides: java-%{javaver}-headless%{?1} = %{epoch}:%{version}-%{release}
-#Provides: jre-headless%{?1} = %{epoch}:%{javaver}
-#Provides: java-%{origin}-headless%{?1} = %{epoch}:%{version}-%{release}
-#Provides: java-headless%{?1} = %{epoch}:%{javaver}
+Provides: jre-headless%{?1} = %{epoch}:%{javaver}
+Provides: java-%{origin}-headless%{?1} = %{epoch}:%{version}-%{release}
+Provides: java-headless%{?1} = %{epoch}:%{javaver}
 # Standard JPackage extensions provides.
-#Provides: jndi%{?1} = %{epoch}:%{version}
-#Provides: jndi-ldap%{?1} = %{epoch}:%{version}
-#Provides: jndi-cos%{?1} = %{epoch}:%{version}
-#Provides: jndi-rmi%{?1} = %{epoch}:%{version}
-#Provides: jndi-dns%{?1} = %{epoch}:%{version}
-#Provides: jaas%{?1} = %{epoch}:%{version}
-#Provides: jsse%{?1} = %{epoch}:%{version}
-#Provides: jce%{?1} = %{epoch}:%{version}
-#Provides: jdbc-stdext%{?1} = 4.1
-#Provides: java-sasl%{?1} = %{epoch}:%{version}
+Provides: jndi%{?1} = %{epoch}:%{version}
+Provides: jndi-ldap%{?1} = %{epoch}:%{version}
+Provides: jndi-cos%{?1} = %{epoch}:%{version}
+Provides: jndi-rmi%{?1} = %{epoch}:%{version}
+Provides: jndi-dns%{?1} = %{epoch}:%{version}
+Provides: jaas%{?1} = %{epoch}:%{version}
+Provides: jsse%{?1} = %{epoch}:%{version}
+Provides: jce%{?1} = %{epoch}:%{version}
+Provides: jdbc-stdext%{?1} = 4.1
+Provides: java-sasl%{?1} = %{epoch}:%{version}
 
 #https://bugzilla.redhat.com/show_bug.cgi?id=1312019
 Provides: /usr/bin/jjs
@@ -824,7 +822,7 @@ Requires(postun): %{_sbindir}/alternatives
 Requires(postun):   chkconfig >= 1.7
 
 # Standard JPackage javadoc provides.
-#Provides: java-javadoc%{?1} = %{epoch}:%{version}-%{release}
+Provides: java-javadoc%{?1} = %{epoch}:%{version}-%{release}
 Provides: java-%{javaver}-javadoc%{?1} = %{epoch}:%{version}-%{release}
 Provides: java-%{javaver}-%{origin}-javadoc = %{epoch}:%{version}-%{release}
 
@@ -834,7 +832,7 @@ Provides: java-%{javaver}-%{origin}-javadoc = %{epoch}:%{version}-%{release}
 Requires: %{name}-headless%{?1}%{?_isa} = %{epoch}:%{version}-%{release}
 
 # Standard JPackage javadoc provides.
-#Provides: java-src%{?1} = %{epoch}:%{version}-%{release}
+Provides: java-src%{?1} = %{epoch}:%{version}-%{release}
 Provides: java-%{javaver}-src%{?1} = %{epoch}:%{version}-%{release}
 Provides: java-%{javaver}-%{origin}-src = %{epoch}:%{version}-%{release}
 }
@@ -862,6 +860,7 @@ Release: 10%{?dist}
 # satisfied by the 1:1.5.0 packages.  Thus we need to set the epoch in
 # JDK package >= 1.6.0 to 1, and packages referring to JDK virtual
 # provides >= 1.6.0 must specify the epoch, "java >= 1:1.6.0".
+
 Epoch:   1
 Summary: OpenJDK Runtime Environment
 Group:   Development/Languages
@@ -902,7 +901,6 @@ Source14: TestECDSA.java
 
 # Ignore AWTError when assistive technologies are loaded 
 Patch1:   accessible-toolkit.patch
-
 # Restrict access to java-atk-wrapper classes
 Patch3: java-atk-wrapper-security.patch
 # RHBZ 808293
@@ -938,7 +936,7 @@ BuildRequires: alsa-lib-devel
 BuildRequires: binutils
 BuildRequires: cups-devel
 BuildRequires: desktop-file-utils
-# elfutils ony are ok for built without AOT
+# elfutils only are ok for built without AOT
 BuildRequires: elfutils-devel
 BuildRequires: fontconfig
 BuildRequires: freetype-devel
@@ -1252,16 +1250,16 @@ cp -r tapset tapset%{debug_suffix}
 for suffix in %{build_loop} ; do
   for file in "tapset"$suffix/*.in; do
     OUTPUT_FILE=`echo $file | sed -e s:%{javaver}\.stp\.in$:%{version}-%{release}.%{_arch}.stp:g`
-    sed -e s:@ABS_SERVER_LIBJVM_SO@:%{_jvmdir}/%{sdkdir $suffix}/lib/%{archinstall}/server/libjvm.so:g $file > $file.1
+    sed -e s:@ABS_SERVER_LIBJVM_SO@:%{_jvmdir}/%{sdkdir -- $suffix}/lib/%{archinstall}/server/libjvm.so:g $file > $file.1
 # TODO find out which architectures other than i686 have a client vm
 %ifarch %{ix86}
-    sed -e s:@ABS_CLIENT_LIBJVM_SO@:%{_jvmdir}/%{sdkdir $suffix}/lib/%{archinstall}/client/libjvm.so:g $file.1 > $OUTPUT_FILE
+    sed -e s:@ABS_CLIENT_LIBJVM_SO@:%{_jvmdir}/%{sdkdir -- $suffix}/lib/%{archinstall}/client/libjvm.so:g $file.1 > $OUTPUT_FILE
 %else
     sed -e '/@ABS_CLIENT_LIBJVM_SO@/d' $file.1 > $OUTPUT_FILE
 %endif
-    sed -i -e s:@ABS_JAVA_HOME_DIR@:%{_jvmdir}/%{sdkdir $suffix}:g $OUTPUT_FILE
+    sed -i -e s:@ABS_JAVA_HOME_DIR@:%{_jvmdir}/%{sdkdir -- $suffix}:g $OUTPUT_FILE
     sed -i -e s:@INSTALL_ARCH_DIR@:%{archinstall}:g $OUTPUT_FILE
-    sed -i -e s:@prefix@:%{_jvmdir}/%{sdkdir $suffix}/:g $OUTPUT_FILE
+    sed -i -e s:@prefix@:%{_jvmdir}/%{sdkdir -- $suffix}/:g $OUTPUT_FILE
   done
 done
 # systemtap tapsets ends
@@ -1274,14 +1272,15 @@ for file in %{SOURCE9} %{SOURCE10} ; do
     EXT="${FILE##*.}"
     NAME="${FILE%.*}"
     OUTPUT_FILE=$NAME$suffix.$EXT
-    sed -e s:#JAVA_HOME#:%{sdkbindir $suffix}:g $file > $OUTPUT_FILE
-    sed -i -e  s:#JRE_HOME#:%{jrebindir $suffix}:g $OUTPUT_FILE
+    sed -e s:#JAVA_HOME#:%{sdkbindir -- $suffix}:g $file > $OUTPUT_FILE
+    sed -i -e  s:#JRE_HOME#:%{jrebindir -- $suffix}:g $OUTPUT_FILE
     sed -i -e  s:#ARCH#:%{version}-%{release}.%{_arch}$suffix:g $OUTPUT_FILE
 done
 done
 
 # Setup nss.cfg
 sed -e s:@NSS_LIBDIR@:%{NSS_LIBDIR}:g %{SOURCE11} > nss.cfg
+
 
 %build
 # How many cpu's do we have?
@@ -1324,8 +1323,8 @@ else
 debugbuild=%{normalbuild_parameter}
 fi
 
-mkdir -p %{buildoutputdir $suffix}
-pushd %{buildoutputdir $suffix}
+mkdir -p %{buildoutputdir -- $suffix}
+pushd %{buildoutputdir -- $suffix}
 
 bash ../configure \
 %ifnarch %{jit_arches}
@@ -1337,7 +1336,7 @@ bash ../configure \
     --with-version-build=%{buildver} \
     --with-version-pre="" \
     --with-version-opt="" \
-    --with-boot-jdk=/usr/lib/jvm/java-1.8.0-openjdk/ \
+    --with-boot-jdk=/usr/lib/jvm/java-1.8.0-openjdk \
     --with-debug-level=$debugbuild \
     --with-native-debug-symbols=internal \
     --enable-unlimited-crypto \
@@ -1488,33 +1487,33 @@ for suffix in %{build_loop} ; do
 
 # Install the jdk
 mkdir -p $RPM_BUILD_ROOT%{_jvmdir}
-cp -a %{buildoutputdir $suffix}/images/%{jdkimage} \
-  $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}
+cp -a %{buildoutputdir -- $suffix}/images/%{jdkimage} \
+  $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}
 
 
 # Install symlink to default soundfont
-install -d -m 755 $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/lib/audio
-pushd $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/lib/audio
+install -d -m 755 $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}/lib/audio
+pushd $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}/lib/audio
 ln -s %{_datadir}/soundfonts/default.sf2
 popd
 
 #install jsa directories so we can owe them
-mkdir -p $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/lib/%{archinstall}/server/
-mkdir -p $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/lib/%{archinstall}/client/
+mkdir -p $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}/lib/%{archinstall}/server/
+mkdir -p $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}/lib/%{archinstall}/client/
 
 pushd %{buildoutputdir $suffix}/images/%{jdkimage}
 
 %if %{with_systemtap}
   # Install systemtap support files.
-  install -dm 755 $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/tapset
+  install -dm 755 $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}/tapset
   # note, that uniquesuffix  is in BUILD dir in this case
-  cp -a $RPM_BUILD_DIR/%{uniquesuffix ""}/tapset$suffix/*.stp $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/tapset/
-  pushd  $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/tapset/
+  cp -a $RPM_BUILD_DIR/%{uniquesuffix ""}/tapset$suffix/*.stp $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}/tapset/
+  pushd  $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}/tapset/
    tapsetFiles=`ls *.stp`
   popd
   install -d -m 755 $RPM_BUILD_ROOT%{tapsetdir}
   pushd $RPM_BUILD_ROOT%{tapsetdir}
-    RELATIVE=$(%{abs2rel} %{_jvmdir}/%{sdkdir $suffix}/tapset %{tapsetdir})
+    RELATIVE=$(%{abs2rel} %{_jvmdir}/%{sdkdir -- $suffix}/tapset %{tapsetdir})
     for name in $tapsetFiles ; do
       targetName=`echo $name | sed "s/.stp/$suffix.stp/"`
       ln -sf $RELATIVE/$name $targetName
@@ -1523,11 +1522,11 @@ pushd %{buildoutputdir $suffix}/images/%{jdkimage}
 %endif
 
   # Remove empty cacerts database.
-  rm -f $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/lib/security/cacerts
+  rm -f $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}/lib/security/cacerts
 
   # Install versioned symlinks.
   pushd $RPM_BUILD_ROOT%{_jvmdir}
-    ln -sf %{sdkdir $suffix} %{jrelnk $suffix}
+    ln -sf %{sdkdir -- $suffix} %{jrelnk -- $suffix}
   popd
 
 
@@ -1539,18 +1538,18 @@ pushd %{buildoutputdir $suffix}/images/%{jdkimage}
     iconv -f ISO_8859-1 -t UTF8 $manpage -o $manpage.tmp
     mv -f $manpage.tmp $manpage
     install -m 644 -p $manpage $RPM_BUILD_ROOT%{_mandir}/man1/$(basename \
-      $manpage .1)-%{uniquesuffix $suffix}.1
+      $manpage .1)-%{uniquesuffix -- $suffix}.1
   done
   # Remove man pages from jdk image
-  rm -rf $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/man
+  rm -rf $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}/man
 
 popd
 
 
 # Install Javadoc documentation.
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}
-cp -a %{buildoutputdir $suffix}/images/docs $RPM_BUILD_ROOT%{_javadocdir}/%{uniquejavadocdir $suffix}
-cp -a %{buildoutputdir $suffix}/bundles/jdk-%{majorver}+%{buildver}-docs.zip  $RPM_BUILD_ROOT%{_javadocdir}/%{uniquejavadocdir $suffix}.zip
+cp -a %{buildoutputdir -- $suffix}/images/docs $RPM_BUILD_ROOT%{_javadocdir}/%{uniquejavadocdir -- $suffix}
+cp -a %{buildoutputdir -- $suffix}/bundles/jdk-%{majorver}+%{buildver}-docs.zip  $RPM_BUILD_ROOT%{_javadocdir}/%{uniquejavadocdir -- $suffix}.zip
 
 # Install icons and menu entries.
 for s in 16 24 32 48 ; do
@@ -1562,7 +1561,7 @@ done
 # Install desktop files.
 install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/{applications,pixmaps}
 for e in jconsole$suffix policytool$suffix ; do
-    desktop-file-install --vendor=%{uniquesuffix $suffix} --mode=644 \
+    desktop-file-install --vendor=%{uniquesuffix -- $suffix} --mode=644 \
         --dir=$RPM_BUILD_ROOT%{_datadir}/applications $e.desktop
 done
 
@@ -1574,15 +1573,15 @@ mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/.java/.systemPrefs
 # https://bugzilla.redhat.com/show_bug.cgi?id=436497
 
 # Find non-documentation demo files.
-find $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/demo \
-  $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/sample \
+find $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}/demo \
+  $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}/sample \
   -type f -o -type l | sort \
   | grep -v README \
   | sed 's|'$RPM_BUILD_ROOT'||' \
   >> %{name}-demo.files"$suffix"
 # Find documentation demo files.
-find $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/demo \
-  $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/sample \
+find $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}/demo \
+  $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}/sample \
   -type f -o -type l | sort \
   | grep README \
   | sed 's|'$RPM_BUILD_ROOT'||' \
@@ -1594,13 +1593,13 @@ find $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/demo \
 # intentionally after the files generation, as it goes to separate package
 # Create links which leads to separately installed java-atk-bridge and allow configuration
 # links points to java-atk-wrapper - an dependence
-  #pushd $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir $suffix}/lib/%{archinstall}
+  #pushd $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir -- $suffix}/lib/%{archinstall}
   #  ln -s %{_libdir}/java-atk-wrapper/libatk-wrapper.so.0 libatk-wrapper.so
   #popd
-  #pushd $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir $suffix}/lib/ext
+  #pushd $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir -- $suffix}/lib/ext
   #   ln -s %{_libdir}/java-atk-wrapper/java-atk-wrapper.jar  java-atk-wrapper.jar
   #popd
-  pushd $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir $suffix}/conf/
+  pushd $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir -- $suffix}/conf/
     echo "#Config file to  enable java-atk-wrapper" > accessibility.properties
     echo "" >> accessibility.properties
     echo "assistive_technologies=org.GNOME.Accessibility.AtkWrapper" >> accessibility.properties
@@ -1608,15 +1607,15 @@ find $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir $suffix}/demo \
   popd
 
 # moving configfiles to /etc
-mkdir -p $RPM_BUILD_ROOT/%{etcjavadir $suffix}
-mkdir -p $RPM_BUILD_ROOT/%{etcjavadir $suffix}/lib
-mv $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir $suffix}/conf/  $RPM_BUILD_ROOT/%{etcjavadir $suffix}
-mv $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir $suffix}/lib/security  $RPM_BUILD_ROOT/%{etcjavadir $suffix}/lib
-pushd $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir $suffix}
-  ln -s %{etcjavadir $suffix}/conf  ./conf
+mkdir -p $RPM_BUILD_ROOT/%{etcjavadir -- $suffix}
+mkdir -p $RPM_BUILD_ROOT/%{etcjavadir -- $suffix}/lib
+mv $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir -- $suffix}/conf/  $RPM_BUILD_ROOT/%{etcjavadir -- $suffix}
+mv $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir -- $suffix}/lib/security  $RPM_BUILD_ROOT/%{etcjavadir -- $suffix}/lib
+pushd $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir --$suffix}
+  ln -s %{etcjavadir -- $suffix}/conf  ./conf
 popd
-pushd $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir $suffix}/lib
-  ln -s %{etcjavadir $suffix}/lib/security  ./security
+pushd $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir -- $suffix}/lib
+  ln -s %{etcjavadir -- $suffix}/lib/security  ./security
 popd
 # end moving files to /etc
 
@@ -1813,6 +1812,8 @@ require "copy_jdk_configs.lua"
 %changelog
 * Thu Oct 26 2017 Jiri Vanek <jvanek@redhat.com> - 1:1.9.0.0-10.b181
 - applied security patches
+- added missing macro parameters dleimiters
+- added provides for java
 
 * Tue Oct 10 2017 Jiri Vanek <jvanek@redhat.com> - 1:1.9.0.0-9.b163
 - now owning dir etcjavasubdir
