@@ -1549,7 +1549,7 @@ popd
 # Install Javadoc documentation.
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}
 cp -a %{buildoutputdir -- $suffix}/images/docs $RPM_BUILD_ROOT%{_javadocdir}/%{uniquejavadocdir -- $suffix}
-cp -a %{buildoutputdir -- $suffix}/bundles/jdk-%{majorver}+%{buildver}-docs.zip  $RPM_BUILD_ROOT%{_javadocdir}/%{uniquejavadocdir -- $suffix}.zip
+cp -a %{buildoutputdir -- $suffix}/bundles/jdk-%{newjavaver}+%{buildver}-docs.zip  $RPM_BUILD_ROOT%{_javadocdir}/%{uniquejavadocdir -- $suffix}.zip
 
 # Install icons and menu entries.
 for s in 16 24 32 48 ; do
