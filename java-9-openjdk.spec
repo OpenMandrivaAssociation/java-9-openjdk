@@ -1611,7 +1611,7 @@ mkdir -p $RPM_BUILD_ROOT/%{etcjavadir -- $suffix}
 mkdir -p $RPM_BUILD_ROOT/%{etcjavadir -- $suffix}/lib
 mv $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir -- $suffix}/conf/  $RPM_BUILD_ROOT/%{etcjavadir -- $suffix}
 mv $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir -- $suffix}/lib/security  $RPM_BUILD_ROOT/%{etcjavadir -- $suffix}/lib
-pushd $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir --$suffix}
+pushd $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir -- $suffix}
   ln -s %{etcjavadir -- $suffix}/conf  ./conf
 popd
 pushd $RPM_BUILD_ROOT/%{_jvmdir}/%{sdkdir -- $suffix}/lib
