@@ -25,13 +25,13 @@ fi
 set -e
 
 if [ "x$PROJECT_NAME" = "x" ] ; then
-    PROJECT_NAME="jdk9"
+    PROJECT_NAME="jdk-updates"
 fi
 if [ "x$REPO_NAME" = "x" ] ; then
-    REPO_NAME="jdk9"
+    REPO_NAME="jdk9u"
 fi
 if [ "x$VERSION" = "x" ] ; then
-    VERSION="jdk-9+181"
+    VERSION="jdk-9.0.1+11"
 fi
 
 if [ "x$COMPRESSION" = "x" ] ; then
