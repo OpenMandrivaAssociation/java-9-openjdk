@@ -467,6 +467,8 @@ exit 0
 
 %define files_jre_headless() %{expand:
 %defattr(-,root,root,-)
+%dir %{_sysconfdir}/.java/.systemPrefs
+%dir %{_sysconfdir}/.java
 %dir %{_jvmdir}/%{sdkdir -- %{?1}}
 %license %{_jvmdir}/%{sdkdir -- %{?1}}/legal
 %{_jvmdir}/%{sdkdir -- %{?1}}/release
@@ -1810,6 +1812,11 @@ require "copy_jdk_configs.lua"
 
 
 %changelog
+* Mond Nov 13 2017 jvanek <jvanek@redhat.com> - 1:9.0.1.11-1
+- added ownership of etc dirs
+- sysconfdir/.java/.systemPrefs
+- sysconfdir/.java
+
 * Fri Oct 27 2017 Jiri Vanek <jvanek@redhat.com> - 1:9.0.1.11-1
 - changed versioning
 - updated to latest usptream release
