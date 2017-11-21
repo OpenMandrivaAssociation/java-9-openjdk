@@ -556,6 +556,7 @@ exit 0
 %dir %{etcjavadir -- %{?1}}
 %dir %{etcjavadir -- %{?1}}/lib
 %dir %{etcjavadir -- %{?1}}/lib/security
+%{etcjavadir -- %{?1}}/lib/security/cacerts
 %dir %{etcjavadir -- %{?1}}/conf
 %dir %{etcjavadir -- %{?1}}/conf/management
 %dir %{etcjavadir -- %{?1}}/conf/security
@@ -582,7 +583,6 @@ exit 0
 %config  %{etcjavadir -- %{?1}}/conf/accessibility.properties
 %{_jvmdir}/%{sdkdir -- %{?1}}/conf
 %{_jvmdir}/%{sdkdir -- %{?1}}/lib/security
-%{_jvmdir}/%{sdkdir -- %{?1}}/lib/security/cacerts
 }
 
 %define files_devel() %{expand:
@@ -1528,9 +1528,9 @@ pushd %{buildoutputdir $suffix}/images/%{jdkimage}
   rm -f $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}/lib/security/cacerts
   # Install cacerts symlink needed by some apps which hardcode the path.
   pushd $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}/lib/security
-    RELATIVE=$(%{abs2rel} %{_sysconfdir}/pki/java \
-      %{_jvmdir}/%{sdkdir -- $suffix}/lib/security)
-    ln -sf $RELATIVE/cacerts .
+  #  RELATIVE=$(%{abs2rel} %{_sysconfdir}/pki/java \
+  #    %{_jvmdir}/%{sdkdir -- $suffix}/lib/security)
+      ln -sf /etc/pki/java/cacerts .
   popd
 
   # Install versioned symlinks.
@@ -1821,6 +1821,7 @@ require "copy_jdk_configs.lua"
 %changelog
 * Wed Nov 22 2017 jvanek <jvanek@redhat.com> - 1:9.0.1.11-4
 - added link to cacerts
+- unlike jdk8, cacert link is absolute link
 - fixes https://bugzilla.redhat.com/show_bug.cgi?id=1513989
 
 * Mon Nov 13 2017 jvanek <jvanek@redhat.com> - 1:9.0.1.11-2
