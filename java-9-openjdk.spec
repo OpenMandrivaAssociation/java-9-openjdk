@@ -852,7 +852,7 @@ Provides: java-%{javaver}-%{origin}-accessiblity = %{epoch}:%{version}-%{release
 
 Name:    java-%{majorver}-%{origin}
 Version: %{newjavaver}.%{buildver}
-Release: 2%{?dist}
+Release: 4%{?dist}
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -1525,6 +1525,13 @@ pushd %{buildoutputdir $suffix}/images/%{jdkimage}
 
   # Remove empty cacerts database.
   rm -f $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}/lib/security/cacerts
+  # Install cacerts symlink needed by some apps which hardcode the path.
+  pushd $RPM_BUILD_ROOT%{_jvmdir}/%{jredir -- $suffix}/lib/security
+    RELATIVE=$(%{abs2rel} %{_sysconfdir}/pki/java \
+      %{_jvmdir}/%{jredir -- $suffix}/lib/security)
+    ln -sf $RELATIVE/cacerts .
+  popd
+
 
   # Install versioned symlinks.
   pushd $RPM_BUILD_ROOT%{_jvmdir}
@@ -1812,6 +1819,10 @@ require "copy_jdk_configs.lua"
 
 
 %changelog
+* Wed Nov 22 2017 jvanek <jvanek@redhat.com> - 1:9.0.1.11-4
+- added link to cacerts
+- fixes https://bugzilla.redhat.com/show_bug.cgi?id=1513989
+
 * Mon Nov 13 2017 jvanek <jvanek@redhat.com> - 1:9.0.1.11-2
 - added ownership of etc dirs
 - sysconfdir/.java/.systemPrefs
