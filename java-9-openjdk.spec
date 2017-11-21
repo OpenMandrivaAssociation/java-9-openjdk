@@ -582,6 +582,7 @@ exit 0
 %config  %{etcjavadir -- %{?1}}/conf/accessibility.properties
 %{_jvmdir}/%{sdkdir -- %{?1}}/conf
 %{_jvmdir}/%{sdkdir -- %{?1}}/lib/security
+%{_jvmdir}/%{sdkdir -- %{?1}}/lib/security/cacerts
 }
 
 %define files_devel() %{expand:
