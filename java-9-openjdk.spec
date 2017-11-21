@@ -1526,12 +1526,11 @@ pushd %{buildoutputdir $suffix}/images/%{jdkimage}
   # Remove empty cacerts database.
   rm -f $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}/lib/security/cacerts
   # Install cacerts symlink needed by some apps which hardcode the path.
-  pushd $RPM_BUILD_ROOT%{_jvmdir}/%{jredir -- $suffix}/lib/security
+  pushd $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir -- $suffix}/lib/security
     RELATIVE=$(%{abs2rel} %{_sysconfdir}/pki/java \
-      %{_jvmdir}/%{jredir -- $suffix}/lib/security)
+      %{_jvmdir}/%{sdkdir -- $suffix}/lib/security)
     ln -sf $RELATIVE/cacerts .
   popd
-
 
   # Install versioned symlinks.
   pushd $RPM_BUILD_ROOT%{_jvmdir}
