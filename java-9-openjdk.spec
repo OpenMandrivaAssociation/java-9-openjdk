@@ -141,7 +141,7 @@
 
 # New Version-String scheme-style defines
 %global majorver 9
-%global securityver 1
+%global securityver 4
 
 # Standard JPackage naming and versioning defines.
 %global origin          openjdk
@@ -853,7 +853,7 @@ Provides: java-%{javaver}-%{origin}-accessiblity = %{epoch}:%{version}-%{release
 
 Name:    java-%{majorver}-%{origin}
 Version: %{newjavaver}.%{buildver}
-Release: 4%{?dist}
+Release: 1%{?dist}
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -872,7 +872,10 @@ License:  ASL 1.1 and ASL 2.0 and GPL+ and GPLv2 and GPLv2 with exceptions and L
 URL:      http://openjdk.java.net/
 
 # Source from upstrem OpenJDK9 project. To regenerate, use
-# ./generate_source_tarball.sh jdk9 jdk9 jdk9-%%{buildver}
+# PROJECT_NAME=jdk-updates REPO_NAME=jdk9u VERSION=jdk-%%{majorver}.%%{minorver}.%%{securityver}+%%{buildver} ./generate_source_tarball.sh
+#
+# Example:
+# PROJECT_NAME=jdk-updates REPO_NAME=jdk9u VERSION=jdk-9.0.4+11 ./generate_source_tarball.sh 
 Source0:  jdk-updates-jdk%{majorver}u-jdk-%{newjavaver}+%{buildver}.tar.xz
 
 # Custom README for -src subpackage
@@ -1819,6 +1822,9 @@ require "copy_jdk_configs.lua"
 
 
 %changelog
+* Wed Jan 17 2018 Severin Gehwolf <sgehwolf@redhat.com> - 1:9.0.4.11-1
+- Update to new upstream version 9.0.4+11 (January CPU)
+
 * Wed Nov 22 2017 jvanek <jvanek@redhat.com> - 1:9.0.1.11-4
 - added link to cacerts
 - unlike jdk8, cacert link is absolute link
