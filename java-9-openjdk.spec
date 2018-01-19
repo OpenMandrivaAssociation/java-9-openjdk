@@ -853,7 +853,7 @@ Provides: java-%{javaver}-%{origin}-accessiblity = %{epoch}:%{version}-%{release
 
 Name:    java-%{majorver}-%{origin}
 Version: %{newjavaver}.%{buildver}
-Release: 1%{?dist}
+Release: 2%{?dist}
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -1256,10 +1256,10 @@ cp -r tapset tapset%{debug_suffix}
 for suffix in %{build_loop} ; do
   for file in "tapset"$suffix/*.in; do
     OUTPUT_FILE=`echo $file | sed -e s:%{javaver}\.stp\.in$:%{version}-%{release}.%{_arch}.stp:g`
-    sed -e s:@ABS_SERVER_LIBJVM_SO@:%{_jvmdir}/%{sdkdir -- $suffix}/lib/%{archinstall}/server/libjvm.so:g $file > $file.1
+    sed -e s:@ABS_SERVER_LIBJVM_SO@:%{_jvmdir}/%{sdkdir -- $suffix}/lib/server/libjvm.so:g $file > $file.1
 # TODO find out which architectures other than i686 have a client vm
 %ifarch %{ix86}
-    sed -e s:@ABS_CLIENT_LIBJVM_SO@:%{_jvmdir}/%{sdkdir -- $suffix}/lib/%{archinstall}/client/libjvm.so:g $file.1 > $OUTPUT_FILE
+    sed -e s:@ABS_CLIENT_LIBJVM_SO@:%{_jvmdir}/%{sdkdir -- $suffix}/lib/client/libjvm.so:g $file.1 > $OUTPUT_FILE
 %else
     sed -e '/@ABS_CLIENT_LIBJVM_SO@/d' $file.1 > $OUTPUT_FILE
 %endif
@@ -1822,6 +1822,9 @@ require "copy_jdk_configs.lua"
 
 
 %changelog
+* Fri Jan 19 2018 Severin Gehwolf <sgehwolf@redhat.com> - 1:9.0.4.11-2
+- Fix path to libjvm.so for systemtap tapsets. Resolves RHBZ#1492175.
+
 * Wed Jan 17 2018 Severin Gehwolf <sgehwolf@redhat.com> - 1:9.0.4.11-1
 - Update to new upstream version 9.0.4+11 (January CPU)
 
