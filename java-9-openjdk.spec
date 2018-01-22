@@ -853,7 +853,7 @@ Provides: java-%{javaver}-%{origin}-accessiblity = %{epoch}:%{version}-%{release
 
 Name:    java-%{majorver}-%{origin}
 Version: %{newjavaver}.%{buildver}
-Release: 2%{?dist}
+Release: 3%{?dist}
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -932,6 +932,8 @@ Patch104: bootcycle_jobs.patch
 
 Patch400: ppc_stack_overflow_fix.patch 
 Patch401: aarch64BuildFailure.patch
+# Fix for: Aarch64 fails to build in 9.0.4+11 (January 2018 CPU)
+Patch402: 8195685.jdk9.patch
 
 # Non-OpenJDK fixes
 Patch1000: enableCommentedOutSystemNss.patch
@@ -1240,7 +1242,11 @@ sh %{SOURCE12}
 %patch400 -p1
 
 %patch401 -p1
+pushd hotspot
+%patch402 -p1
 popd
+
+popd # openjdk
 
 %patch1000
 
@@ -1822,6 +1828,9 @@ require "copy_jdk_configs.lua"
 
 
 %changelog
+* Mon Jan 22 2018 Severin Gehwolf <sgehwolf@redhat.com> - 1:9.0.4.11-3
+- Add Aarch64 patch for 8195685. Broken Aarch64 after 9.0.4.
+
 * Fri Jan 19 2018 Severin Gehwolf <sgehwolf@redhat.com> - 1:9.0.4.11-2
 - Fix path to libjvm.so for systemtap tapsets. Resolves RHBZ#1492175.
 
