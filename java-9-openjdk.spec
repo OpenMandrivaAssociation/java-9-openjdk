@@ -938,9 +938,11 @@ Patch401: aarch64BuildFailure.patch
 # JDK-8195685 AArch64 cannot build with JDK-8174962
 # JDK-8196136 AArch64: Correct register use in patch for JDK-8195685
 # JDK-8195859 AArch64: vtableStubs gtest fails after 8174962
+# JDK-8196221 AArch64: Mistake in committed patch for JDK-8195859
 Patch402: JDK-8195685-cannot-build-with-8174962.patch
 Patch403: JDK-8196136-correct-register-use-8195685.patch
 Patch404: JDK-8195859-vtableStubs-gtest-fails-after-8174962.patch
+Patch405: JDK-8196221-mistake-in-8195859.patch
 
 # Non-OpenJDK fixes
 Patch1000: enableCommentedOutSystemNss.patch
@@ -1253,6 +1255,7 @@ pushd hotspot
 %patch402 -p1
 %patch403 -p1
 %patch404 -p1
+%patch405 -p1
 popd
 
 popd # openjdk
