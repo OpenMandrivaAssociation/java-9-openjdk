@@ -853,7 +853,7 @@ Provides: java-%{javaver}-%{origin}-accessiblity = %{epoch}:%{version}-%{release
 
 Name:    java-%{majorver}-%{origin}
 Version: %{newjavaver}.%{buildver}
-Release: 3%{?dist}
+Release: 4%{?dist}
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -932,8 +932,15 @@ Patch104: bootcycle_jobs.patch
 
 Patch400: ppc_stack_overflow_fix.patch 
 Patch401: aarch64BuildFailure.patch
-# Fix for: Aarch64 fails to build in 9.0.4+11 (January 2018 CPU)
-Patch402: 8195685.jdk9.patch
+
+# Fix AArch64 build issues which got introduced with 9.0.4+11 (January 2018 CPU)
+#
+# JDK-8195685 AArch64 cannot build with JDK-8174962
+# JDK-8196136 AArch64: Correct register use in patch for JDK-8195685
+# JDK-8195859 AArch64: vtableStubs gtest fails after 8174962
+Patch402: JDK-8195685-cannot-build-with-8174962.patch
+Patch403: JDK-8196136-correct-register-use-8195685.patch
+Patch404: JDK-8195859-vtableStubs-gtest-fails-after-8174962.patch
 
 # Non-OpenJDK fixes
 Patch1000: enableCommentedOutSystemNss.patch
@@ -1244,6 +1251,8 @@ sh %{SOURCE12}
 %patch401 -p1
 pushd hotspot
 %patch402 -p1
+%patch403 -p1
+%patch404 -p1
 popd
 
 popd # openjdk
@@ -1828,6 +1837,10 @@ require "copy_jdk_configs.lua"
 
 
 %changelog
+* Fri Jan 26 2018 Severin Gehwolf <sgehwolf@redhat.com> - 1:9.0.4.11-4
+- Update AArch64 patch series (3) from upstream which fix
+  FTBFS on AArch64 post-January CPU.
+
 * Mon Jan 22 2018 Severin Gehwolf <sgehwolf@redhat.com> - 1:9.0.4.11-3
 - Add Aarch64 patch for 8195685. Broken Aarch64 after 9.0.4.
 

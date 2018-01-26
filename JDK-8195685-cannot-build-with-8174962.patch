@@ -1,6 +1,15 @@
-diff -r bb73b31e70e3 src/cpu/aarch64/vm/macroAssembler_aarch64.cpp
---- a/src/cpu/aarch64/vm/macroAssembler_aarch64.cpp	Tue Dec 19 15:25:42 2017 -0800
-+++ b/src/cpu/aarch64/vm/macroAssembler_aarch64.cpp	Fri Jan 19 17:02:15 2018 +0000
+# HG changeset patch
+# User aph
+# Date 1516971866 -3600
+#      Fri Jan 26 14:04:26 2018 +0100
+# Node ID a8b7d1fd5884bcfe816df11f16dd71aec7bdacdb
+# Parent  f6418daf023ea194db63519e3d13ca6c252028ed
+8195685: AArch64: AArch64 cannot build with JDK-8174962
+Reviewed-by: adinn, njian
+
+diff --git a/src/cpu/aarch64/vm/macroAssembler_aarch64.cpp b/src/cpu/aarch64/vm/macroAssembler_aarch64.cpp
+--- a/src/cpu/aarch64/vm/macroAssembler_aarch64.cpp
++++ b/src/cpu/aarch64/vm/macroAssembler_aarch64.cpp
 @@ -927,8 +927,12 @@
                                               RegisterOrConstant itable_index,
                                               Register method_result,
@@ -50,9 +59,9 @@ diff -r bb73b31e70e3 src/cpu/aarch64/vm/macroAssembler_aarch64.cpp
  }
  
  // virtual method calling
-diff -r bb73b31e70e3 src/cpu/aarch64/vm/macroAssembler_aarch64.hpp
---- a/src/cpu/aarch64/vm/macroAssembler_aarch64.hpp	Tue Dec 19 15:25:42 2017 -0800
-+++ b/src/cpu/aarch64/vm/macroAssembler_aarch64.hpp	Fri Jan 19 17:02:15 2018 +0000
+diff --git a/src/cpu/aarch64/vm/macroAssembler_aarch64.hpp b/src/cpu/aarch64/vm/macroAssembler_aarch64.hpp
+--- a/src/cpu/aarch64/vm/macroAssembler_aarch64.hpp
++++ b/src/cpu/aarch64/vm/macroAssembler_aarch64.hpp
 @@ -870,7 +870,8 @@
                                 RegisterOrConstant itable_index,
                                 Register method_result,
@@ -63,9 +72,9 @@ diff -r bb73b31e70e3 src/cpu/aarch64/vm/macroAssembler_aarch64.hpp
  
    // virtual method calling
    // n.b. x86 allows RegisterOrConstant for vtable_index
-diff -r bb73b31e70e3 src/cpu/aarch64/vm/templateTable_aarch64.cpp
---- a/src/cpu/aarch64/vm/templateTable_aarch64.cpp	Tue Dec 19 15:25:42 2017 -0800
-+++ b/src/cpu/aarch64/vm/templateTable_aarch64.cpp	Fri Jan 19 17:02:15 2018 +0000
+diff --git a/src/cpu/aarch64/vm/templateTable_aarch64.cpp b/src/cpu/aarch64/vm/templateTable_aarch64.cpp
+--- a/src/cpu/aarch64/vm/templateTable_aarch64.cpp
++++ b/src/cpu/aarch64/vm/templateTable_aarch64.cpp
 @@ -3279,11 +3279,11 @@
    transition(vtos, vtos);
    assert(byte_no == f1_byte, "use this argument");
@@ -111,9 +120,9 @@ diff -r bb73b31e70e3 src/cpu/aarch64/vm/templateTable_aarch64.cpp
    __ lookup_interface_method(// inputs: rec. class, interface, itable index
                               r3, r0, rmethod,
                               // outputs: method, scan temp. reg
-diff -r bb73b31e70e3 src/cpu/aarch64/vm/vtableStubs_aarch64.cpp
---- a/src/cpu/aarch64/vm/vtableStubs_aarch64.cpp	Tue Dec 19 15:25:42 2017 -0800
-+++ b/src/cpu/aarch64/vm/vtableStubs_aarch64.cpp	Fri Jan 19 17:02:15 2018 +0000
+diff --git a/src/cpu/aarch64/vm/vtableStubs_aarch64.cpp b/src/cpu/aarch64/vm/vtableStubs_aarch64.cpp
+--- a/src/cpu/aarch64/vm/vtableStubs_aarch64.cpp
++++ b/src/cpu/aarch64/vm/vtableStubs_aarch64.cpp
 @@ -29,6 +29,7 @@
  #include "code/vtableStubs.hpp"
  #include "interp_masm_aarch64.hpp"
@@ -149,10 +158,14 @@ diff -r bb73b31e70e3 src/cpu/aarch64/vm/vtableStubs_aarch64.cpp
    assert(VtableStub::receiver_location() == j_rarg0->as_VMReg(), "receiver expected in j_rarg0");
    // get receiver klass (also an implicit null-check)
    address npe_addr = __ pc();
-+  __ load_klass(recv_klass_reg, j_rarg0);
- 
+-
 -  // Most registers are in use; we'll use r0, rmethod, r10, r11
 -  __ load_klass(r10, j_rarg0);
+-
+-  Label throw_icce;
++  __ load_klass(recv_klass_reg, j_rarg0);
+ 
+-  // Get Method* and entrypoint for compiler
 +  // Receiver subtype check against REFC.
 +  // Destroys recv_klass_reg value.
 +  __ lookup_interface_method(// inputs: rec. class, interface
@@ -161,10 +174,7 @@ diff -r bb73b31e70e3 src/cpu/aarch64/vm/vtableStubs_aarch64.cpp
 +                             recv_klass_reg, temp_reg,
 +                             L_no_such_interface,
 +                             /*return_method=*/false);
- 
--  Label throw_icce;
--
--  // Get Method* and entrypoint for compiler
++
 +  // Get selected method from declaring class and itable index
 +  __ load_klass(recv_klass_reg, j_rarg0);   // restore recv_klass_reg
    __ lookup_interface_method(// inputs: rec. class, interface, itable index
@@ -284,3 +294,4 @@ diff -r bb73b31e70e3 src/cpu/aarch64/vm/vtableStubs_aarch64.cpp
 +  //    b      throw_ICCE_entry
  
  }
+ 
