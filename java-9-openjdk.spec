@@ -853,7 +853,7 @@ Provides: java-%{javaver}-%{origin}-accessiblity = %{epoch}:%{version}-%{release
 
 Name:    java-%{majorver}-%{origin}
 Version: %{newjavaver}.%{buildver}
-Release: 4%{?dist}
+Release: 5%{?dist}
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -1840,6 +1840,9 @@ require "copy_jdk_configs.lua"
 
 
 %changelog
+* Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1:9.0.4.11-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
+
 * Fri Jan 26 2018 Severin Gehwolf <sgehwolf@redhat.com> - 1:9.0.4.11-4
 - Update AArch64 patch series (3) from upstream which fix
   FTBFS on AArch64 post-January CPU.
