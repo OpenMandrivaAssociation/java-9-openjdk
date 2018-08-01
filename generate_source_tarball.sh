@@ -7,9 +7,12 @@
 # if you wont to use local copy of patch PR2126 set path to it to PR2126 variable
 #
 # In any case you have to set PROJECT_NAME REPO_NAME and VERSION. eg:
-# PROJECT_NAME=jdk9
-# REPO_NAME=jdk9
-# VERSION=inDevelopment (but keyword tip will still do its job)
+# PROJECT_NAME=jdk-updates
+# REPO_NAME=jdk9u
+# VERSION=jdk-9.0.4+12 (but keyword tip will still do its job)
+# See
+#   http://hg.openjdk.java.net/jdk-updates/jdk9u/
+# for list of tags
 # 
 # They are used to create correct name and are used in construction of sources url (unless REPO_ROOT is set)
 
@@ -27,6 +30,7 @@ if [ ! "x$PR2126" = "x" ] ; then
 fi
 set -e
 
+OURDIR=$(realpath $(dirname $0))
 OPENJDK_URL_DEFAULT=http://hg.openjdk.java.net
 COMPRESSION_DEFAULT=xz
 # jdk is last for its size
@@ -132,6 +136,10 @@ fi
 find . -name '*.orig' -exec rm -vf '{}' ';'
 
 popd
+
+echo "Removing in-tree libraries"
+$OURDIR/remove-intree-libraries.sh
+
 echo "Compressing remaining forest"
 if [ "X$COMPRESSION" = "Xxz" ] ; then
     tar --exclude-vcs -cJf ${FILE_NAME_ROOT}.tar.${COMPRESSION} openjdk
@@ -142,5 +150,3 @@ fi
 mv ${FILE_NAME_ROOT}.tar.${COMPRESSION}  ..
 popd
 echo "Done. You may want to remove the uncompressed version."
-
-

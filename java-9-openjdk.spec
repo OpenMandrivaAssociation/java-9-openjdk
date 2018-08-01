@@ -20,13 +20,12 @@
 %global build_loop1 %{nil}
 %endif
 
-%global aarch64         aarch64 arm64 armv8
 # sometimes we need to distinguish big and little endian PPC64
 %global ppc64le         ppc64le
 %global ppc64be         ppc64 ppc64p7
-%global multilib_arches %{power64} sparc64 x86_64
-%global jit_arches      %{ix86} x86_64 sparcv9 sparc64 %{aarch64} %{power64} %{arm} s390x
-%global aot_arches      x86_64
+%global multilib_arches %{power64} sparc64 %{x86_64}
+%global jit_arches      %{ix86} %{x86_64} sparcv9 sparc64 %{aarch64} %{power64} %{arm} s390x
+%global aot_arches      %{x86_64}
 
 # By default, we build a debug build during main build on JIT architectures
 %ifarch %{jit_arches}
@@ -69,9 +68,9 @@
 # Always set this so the nss.cfg file is not broken
 %global NSS_LIBDIR %(pkg-config --variable=libdir nss)
 %global NSS_LIBS %(pkg-config --libs nss)
-%global NSS_CFLAGS %(pkg-config --cflags nss-softokn)
+%global NSS_CFLAGS %(pkg-config --cflags nss)
 # see https://bugzilla.redhat.com/show_bug.cgi?id=1332456
-%global NSSSOFTOKN_BUILDTIME_NUMBER %(pkg-config --modversion nss-softokn || : )
+%global NSSSOFTOKN_BUILDTIME_NUMBER %(pkg-config --modversion nss || : )
 %global NSS_BUILDTIME_NUMBER %(pkg-config --modversion nss || : )
 #this is worakround for processing of requires during srpm creation
 %global NSSSOFTOKN_BUILDTIME_VERSION %(if [ "x%{NSSSOFTOKN_BUILDTIME_NUMBER}" == "x" ] ; then echo "" ;else echo ">= %{NSSSOFTOKN_BUILDTIME_NUMBER}" ;fi)
@@ -83,7 +82,7 @@
 %global __provides_exclude ^(%{_privatelibs})$
 %global __requires_exclude ^(%{_privatelibs})$
 
-%ifarch x86_64
+%ifarch %{x86_64}
 %global archinstall amd64
 %endif
 %ifarch ppc
@@ -146,7 +145,7 @@
 # Standard JPackage naming and versioning defines.
 %global origin          openjdk
 %global minorver        0
-%global buildver        11
+%global buildver        12
 # priority must be 7 digits in total
 #setting to 1, so debug ones can have 0
 %global priority        00000%{minorver}1
@@ -676,7 +675,6 @@ exit 0
 
 %define files_src() %{expand:
 %defattr(-,root,root,-)
-%doc README.md
 %{_jvmdir}/%{sdkdir -- %{?1}}/lib/src.zip
 }
 
@@ -733,7 +731,6 @@ Requires: tzdata-java >= 2015d
 Requires: lksctp-tools%{?_isa}
 # there is a need to depend on the exact version of NSS
 Requires: nss%{?_isa} %{NSS_BUILDTIME_VERSION}
-Requires: nss-softokn%{?_isa} %{NSSSOFTOKN_BUILDTIME_VERSION}
 # tool to copy jdk's configs - should be Recommends only, but then only dnf/yum eforce it, not rpm transaction and so no configs are persisted when pure rpm -u is run. I t may be consiedered as regression
 Requires:	copy-jdk-configs >= 3.3
 OrderWithRequires: copy-jdk-configs
@@ -875,11 +872,8 @@ URL:      http://openjdk.java.net/
 # PROJECT_NAME=jdk-updates REPO_NAME=jdk9u VERSION=jdk-%%{majorver}.%%{minorver}.%%{securityver}+%%{buildver} ./generate_source_tarball.sh
 #
 # Example:
-# PROJECT_NAME=jdk-updates REPO_NAME=jdk9u VERSION=jdk-9.0.4+11 ./generate_source_tarball.sh 
+# PROJECT_NAME=jdk-updates REPO_NAME=jdk9u VERSION=jdk-9.0.4+12 ./generate_source_tarball.sh 
 Source0:  jdk-updates-jdk%{majorver}u-jdk-%{newjavaver}+%{buildver}.tar.xz
-
-# Custom README for -src subpackage
-Source2:  README.md
 
 # Use 'generate_tarballs.sh' to generate the following tarballs
 # They are based on code contained in the IcedTea7 project.
@@ -933,23 +927,12 @@ Patch104: bootcycle_jobs.patch
 Patch400: ppc_stack_overflow_fix.patch 
 Patch401: aarch64BuildFailure.patch
 
-# Fix AArch64 build issues which got introduced with 9.0.4+11 (January 2018 CPU)
-#
-# JDK-8195685 AArch64 cannot build with JDK-8174962
-# JDK-8196136 AArch64: Correct register use in patch for JDK-8195685
-# JDK-8195859 AArch64: vtableStubs gtest fails after 8174962
-# JDK-8196221 AArch64: Mistake in committed patch for JDK-8195859
-Patch402: JDK-8195685-cannot-build-with-8174962.patch
-Patch403: JDK-8196136-correct-register-use-8195685.patch
-Patch404: JDK-8195859-vtableStubs-gtest-fails-after-8174962.patch
-Patch405: JDK-8196221-mistake-in-8195859.patch
-
 # Non-OpenJDK fixes
 Patch1000: enableCommentedOutSystemNss.patch
 
 BuildRequires: autoconf
 BuildRequires: automake
-BuildRequires: alsa-lib-devel
+BuildRequires: pkgconfig(alsa)
 BuildRequires: binutils
 BuildRequires: cups-devel
 BuildRequires: desktop-file-utils
@@ -960,20 +943,20 @@ BuildRequires: freetype-devel
 BuildRequires: giflib-devel
 BuildRequires: gcc-c++
 BuildRequires: gdb
-BuildRequires: gtk2-devel
-BuildRequires: lcms2-devel
-BuildRequires: libjpeg-devel
-BuildRequires: libpng-devel
-BuildRequires: libxslt
-BuildRequires: libX11-devel
-BuildRequires: libXi-devel
-BuildRequires: libXinerama-devel
-BuildRequires: libXt-devel
-BuildRequires: libXtst-devel
+BuildRequires: pkgconfig(gtk+-2.0)
+BuildRequires: pkgconfig(lcms2)
+BuildRequires: pkgconfig(libjpeg)
+BuildRequires: pkgconfig(libpng)
+BuildRequires: xsltproc
+BuildRequires: pkgconfig(x11)
+BuildRequires: pkgconfig(xi)
+BuildRequires: pkgconfig(xinerama)
+BuildRequires: pkgconfig(xt)
+BuildRequires: pkgconfig(xtst)
 # Requirements for setting up the nss.cfg
-BuildRequires: nss-devel
+BuildRequires: pkgconfig(nss)
 BuildRequires: pkgconfig
-BuildRequires: xorg-x11-proto-devel
+BuildRequires: pkgconfig(xproto)
 BuildRequires: zip
 BuildRequires: java-1.8.0-openjdk-devel
 # Zero-assembler build requirement.
@@ -983,11 +966,9 @@ BuildRequires: libffi-devel
 BuildRequires: tzdata-java >= 2015d
 # Earlier versions have a bug in tree vectorization on PPC
 BuildRequires: gcc >= 4.8.3-8
-# Build requirements for SunEC system NSS support
-BuildRequires: nss-softokn-freebl-devel >= 3.16.1
 
 %if %{with_systemtap}
-BuildRequires: systemtap-sdt-devel
+BuildRequires: systemtap-devel
 %endif
 
 # this is built always, also during debug-only build
@@ -1222,13 +1203,11 @@ if [ $prioritylength -ne 7 ] ; then
  echo "priority must be 7 digits in total, violated"
  exit 14
 fi
-cp %{SOURCE2} .
 
 # OpenJDK patches
 
 # Remove libraries that are linked
 pushd openjdk
-sh %{SOURCE12}
 %patch1 -p1
 %patch3 -p1
 %patch4 -p1
@@ -1251,20 +1230,13 @@ sh %{SOURCE12}
 %patch400 -p1
 
 %patch401 -p1
-pushd hotspot
-%patch402 -p1
-%patch403 -p1
-%patch404 -p1
-%patch405 -p1
-popd
-
 popd # openjdk
 
 %patch1000
 
 # Extract systemtap tapsets
 %if %{with_systemtap}
-tar -x -I xz -f %{SOURCE8}
+tar xf %{SOURCE8}
 #%patch300
 %if %{include_debug_build}
 cp -r tapset tapset%{debug_suffix}
@@ -1360,7 +1332,7 @@ bash ../configure \
     --with-version-build=%{buildver} \
     --with-version-pre="" \
     --with-version-opt="" \
-    --with-boot-jdk=/usr/lib/jvm/java-1.8.0-openjdk \
+    --with-boot-jdk=/usr/lib/jvm/java-1.8.0 \
     --with-debug-level=$debugbuild \
     --with-native-debug-symbols=internal \
     --enable-unlimited-crypto \
