@@ -1304,6 +1304,11 @@ EXTRA_CFLAGS="$EXTRA_CFLAGS -Wno-error -std=gnu++98  -fno-delete-null-pointer-ch
 EXTRA_CPP_FLAGS="$EXTRA_CPP_FLAGS -Wno-error -std=gnu++98 -fno-delete-null-pointer-checks -fno-lifetime-dse"
 %endif
 
+%ifarch %{ix86}
+EXTRA_CFLAGS="$EXTRA_CFLAGS -mincoming-stack-boundary=2"
+EXTRA_CPP_FLAGS="$EXTRA_CPP_FLAGS -mincoming-stack-boundary=2"
+%endif
+
 (cd openjdk/common/autoconf
  bash ./autogen.sh
 )
