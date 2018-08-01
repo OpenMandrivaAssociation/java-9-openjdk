@@ -696,10 +696,10 @@ exit 0
 #%{_jvmdir}/%{etcjavadir -- %{?1}}/conf/accessibility.properties
 }
 
-# not-duplicated requires/provides/obsolate for normal/debug packages
+# not-duplicated requires/provides/obsolete for normal/debug packages
 %define java_rpo() %{expand:
 Requires: fontconfig%{?_isa}
-Requires: xorg-x11-fonts-Type1
+Suggests: x11-font-type1
 
 # Requires rest of java
 Requires: %{name}-headless%{?1}%{?_isa} = %{epoch}:%{version}-%{release}
@@ -731,9 +731,6 @@ Requires: tzdata-java >= 2015d
 Requires: lksctp-tools%{?_isa}
 # there is a need to depend on the exact version of NSS
 Requires: nss%{?_isa} %{NSS_BUILDTIME_VERSION}
-# tool to copy jdk's configs - should be Recommends only, but then only dnf/yum eforce it, not rpm transaction and so no configs are persisted when pure rpm -u is run. I t may be consiedered as regression
-Requires:	copy-jdk-configs >= 3.3
-OrderWithRequires: copy-jdk-configs
 # Post requires alternatives to install tool alternatives.
 Requires(post):   %{_sbindir}/alternatives
 # in version 1.7 and higher for --family switch
@@ -861,7 +858,6 @@ Release: 6%{?dist}
 # JDK package >= 1.6.0 to 1, and packages referring to JDK virtual
 # provides >= 1.6.0 must specify the epoch, "java >= 1:1.6.0".
 
-Epoch:   1
 Summary: OpenJDK Runtime Environment
 Group:   Development/Languages
 
@@ -1624,49 +1620,6 @@ popd
 # end, dual install
 done
 
-%if %{include_normal_build} 
-# intentioanlly only for non-debug
-%pretrans headless -p <lua>
--- see https://bugzilla.redhat.com/show_bug.cgi?id=1038092 for whole issue
--- see https://bugzilla.redhat.com/show_bug.cgi?id=1290388 for pretrans over pre
--- if copy-jdk-configs is in transaction, it installs in pretrans to temp
--- if copy_jdk_configs is in temp, then it means that copy-jdk-configs is in tranasction  and so is
--- preferred over one in %%{_libexecdir}. If it is not in transaction, then depends 
--- whether copy-jdk-configs is installed or not. If so, then configs are copied
--- (copy_jdk_configs from %%{_libexecdir} used) or not copied at all
-local posix = require "posix"
-local debug = false
-
-SOURCE1 = "%{rpm_state_dir}/copy_jdk_configs.lua"
-SOURCE2 = "%{_libexecdir}/copy_jdk_configs.lua"
-
-local stat1 = posix.stat(SOURCE1, "type");
-local stat2 = posix.stat(SOURCE2, "type");
-
-  if (stat1 ~= nil) then
-  if (debug) then
-    print(SOURCE1 .." exists - copy-jdk-configs in transaction, using this one.")
-  end;
-  package.path = package.path .. ";" .. SOURCE1
-else 
-  if (stat2 ~= nil) then
-  if (debug) then
-    print(SOURCE2 .." exists - copy-jdk-configs alrady installed and NOT in transation. Using.")
-  end;
-  package.path = package.path .. ";" .. SOURCE2
-  else
-    if (debug) then
-      print(SOURCE1 .." does NOT exists")
-      print(SOURCE2 .." does NOT exists")
-      print("No config files will be copied")
-    end
-  return
-  end
-end
--- run contetn of included file with fake args
-arg = {"--currentjvm", "%{uniquesuffix %{nil}}", "--jvmdir", "%{_jvmdir %{nil}}", "--origname", "%{name}", "--origjavaver", "%{javaver}", "--arch", "%{_arch}", "--temp", "%{rpm_state_dir}/%{name}.%{_arch}"}
-require "copy_jdk_configs.lua"
-
 %post 
 %{post_script %{nil}}
 
@@ -1809,65 +1762,3 @@ require "copy_jdk_configs.lua"
 %files accessibility-debug
 %{files_accessibility -- %{debug_suffix_unquoted}}
 %endif
-
-
-%changelog
-* Tue Feb 13 2018 Sandro Mani <manisandro@gmail.com> - 1:9.0.4.11-6
-- Rebuild (giflib)
-
-* Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1:9.0.4.11-5
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
-
-* Fri Jan 26 2018 Severin Gehwolf <sgehwolf@redhat.com> - 1:9.0.4.11-4
-- Update AArch64 patch series (3) from upstream which fix
-  FTBFS on AArch64 post-January CPU.
-
-* Mon Jan 22 2018 Severin Gehwolf <sgehwolf@redhat.com> - 1:9.0.4.11-3
-- Add Aarch64 patch for 8195685. Broken Aarch64 after 9.0.4.
-
-* Fri Jan 19 2018 Severin Gehwolf <sgehwolf@redhat.com> - 1:9.0.4.11-2
-- Fix path to libjvm.so for systemtap tapsets. Resolves RHBZ#1492175.
-
-* Wed Jan 17 2018 Severin Gehwolf <sgehwolf@redhat.com> - 1:9.0.4.11-1
-- Update to new upstream version 9.0.4+11 (January CPU)
-
-* Wed Nov 22 2017 jvanek <jvanek@redhat.com> - 1:9.0.1.11-4
-- added link to cacerts
-- unlike jdk8, cacert link is absolute link
-- fixes https://bugzilla.redhat.com/show_bug.cgi?id=1513989
-
-* Mon Nov 13 2017 jvanek <jvanek@redhat.com> - 1:9.0.1.11-2
-- added ownership of etc dirs
-- sysconfdir/.java/.systemPrefs
-- sysconfdir/.java
-
-* Fri Oct 27 2017 Jiri Vanek <jvanek@redhat.com> - 1:9.0.1.11-1
-- changed versioning
-- updated to latest usptream release
-
-* Thu Oct 26 2017 Jiri Vanek <jvanek@redhat.com> - 1:1.9.0.0-10.b181
-- applied security patches
-- added missing macro parameters dleimiters
-- added provides for java
-
-* Tue Oct 10 2017 Jiri Vanek <jvanek@redhat.com> - 1:1.9.0.0-9.b163
-- now owning dir etcjavasubdir
-
-* Tue Oct 10 2017 Jiri Vanek <jvanek@redhat.com> - 1:1.9.0.0-8.b163
-- EC no longer built
-
-* Tue Oct 10 2017 Jiri Vanek <jvanek@redhat.com> - 1:1.9.0.0-7.b163
-- now owning dir etcjavadir
-
-* Thu Oct 05 2017 Jiri Vanek <jvanek@redhat.com> - 1:1.9.0.0-4.b163
-- config files moved to etc
-
-* Tue Aug 29 2017 Michal Vala  <mvala@redhat.com> - 1:1.9.0.0-3.b163
-- changed  archinstall to i686
-- added ownership of lib/client/
-
-* Tue Apr 18 2017 Jiri Vanek <jvanek@redhat.com> - 1:1.9.0.0-2.b163
-- sync with openjdk8 rpms
-
-* Tue Feb 24 2015 Omair Majid <omajid@redhat.com> - 1:1.9.0.0-0.b25
-- Initial build from java-1.8.0-openjdk RPM
