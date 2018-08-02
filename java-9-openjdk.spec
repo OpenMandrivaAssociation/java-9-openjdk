@@ -702,21 +702,21 @@ Requires: fontconfig%{?_isa}
 Suggests: x11-font-type1
 
 # Requires rest of java
-Requires: %{name}-headless%{?1}%{?_isa} = %{epoch}:%{version}-%{release}
-OrderWithRequires: %{name}-headless%{?1}%{?_isa} = %{epoch}:%{version}-%{release}
+Requires: %{name}-headless%{?1}%{?_isa} = %{version}-%{release}
+OrderWithRequires: %{name}-headless%{?1}%{?_isa} = %{version}-%{release}
 
-Provides: java-%{javaver}-%{origin} = %{epoch}:%{version}-%{release}
+Provides: java-%{javaver}-%{origin} = %{version}-%{release}
 
 # Standard JPackage base provides.
-Provides: jre-%{javaver}-%{origin}%{?1} = %{epoch}:%{version}-%{release}
-Provides: jre-%{origin}%{?1} = %{epoch}:%{version}-%{release}
-Provides: jre-%{javaver}%{?1} = %{epoch}:%{version}-%{release}
-Provides: java-%{javaver}%{?1} = %{epoch}:%{version}-%{release}
+Provides: jre-%{javaver}-%{origin}%{?1} = %{version}-%{release}
+Provides: jre-%{origin}%{?1} = %{version}-%{release}
+Provides: jre-%{javaver}%{?1} = %{version}-%{release}
+Provides: java-%{javaver}%{?1} = %{version}-%{release}
 Provides: jre = %{javaver}%{?1}
-Provides: java-%{origin}%{?1} = %{epoch}:%{version}-%{release}
-Provides: java%{?1} = %{epoch}:%{javaver}
+Provides: java-%{origin}%{?1} = %{version}-%{release}
+Provides: java%{?1} = %{javaver}
 # Standard JPackage extensions provides.
-Provides: java-fonts%{?1} = %{epoch}:%{version}
+Provides: java-fonts%{?1} = %{version}
 
 }
 
@@ -741,24 +741,24 @@ Requires(postun): %{_sbindir}/alternatives
 Requires(postun):   chkconfig >= 1.7
 
 # Standard JPackage base provides.
-Provides: jre-%{javaver}-%{origin}-headless%{?1} = %{epoch}:%{version}-%{release}
-Provides: jre-%{origin}-headless%{?1} = %{epoch}:%{version}-%{release}
-Provides: jre-%{javaver}-headless%{?1} = %{epoch}:%{version}-%{release}
-Provides: java-%{javaver}-headless%{?1} = %{epoch}:%{version}-%{release}
-Provides: jre-headless%{?1} = %{epoch}:%{javaver}
-Provides: java-%{origin}-headless%{?1} = %{epoch}:%{version}-%{release}
-Provides: java-headless%{?1} = %{epoch}:%{javaver}
+Provides: jre-%{javaver}-%{origin}-headless%{?1} = %{version}-%{release}
+Provides: jre-%{origin}-headless%{?1} = %{version}-%{release}
+Provides: jre-%{javaver}-headless%{?1} = %{version}-%{release}
+Provides: java-%{javaver}-headless%{?1} = %{version}-%{release}
+Provides: jre-headless%{?1} = %{javaver}
+Provides: java-%{origin}-headless%{?1} = %{version}-%{release}
+Provides: java-headless%{?1} = %{javaver}
 # Standard JPackage extensions provides.
-Provides: jndi%{?1} = %{epoch}:%{version}
-Provides: jndi-ldap%{?1} = %{epoch}:%{version}
-Provides: jndi-cos%{?1} = %{epoch}:%{version}
-Provides: jndi-rmi%{?1} = %{epoch}:%{version}
-Provides: jndi-dns%{?1} = %{epoch}:%{version}
-Provides: jaas%{?1} = %{epoch}:%{version}
-Provides: jsse%{?1} = %{epoch}:%{version}
-Provides: jce%{?1} = %{epoch}:%{version}
+Provides: jndi%{?1} = %{version}
+Provides: jndi-ldap%{?1} = %{version}
+Provides: jndi-cos%{?1} = %{version}
+Provides: jndi-rmi%{?1} = %{version}
+Provides: jndi-dns%{?1} = %{version}
+Provides: jaas%{?1} = %{version}
+Provides: jsse%{?1} = %{version}
+Provides: jce%{?1} = %{version}
 Provides: jdbc-stdext%{?1} = 4.1
-Provides: java-sasl%{?1} = %{epoch}:%{version}
+Provides: java-sasl%{?1} = %{version}
 
 #https://bugzilla.redhat.com/show_bug.cgi?id=1312019
 Provides: /usr/bin/jjs
@@ -767,8 +767,8 @@ Provides: /usr/bin/jjs
 
 %define java_devel_rpo() %{expand:
 # Require base package.
-Requires:         %{name}%{?1}%{?_isa} = %{epoch}:%{version}-%{release}
-OrderWithRequires: %{name}-headless%{?1}%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:         %{name}%{?1}%{?_isa} = %{version}-%{release}
+OrderWithRequires: %{name}-headless%{?1}%{?_isa} = %{version}-%{release}
 # Post requires alternatives to install tool alternatives.
 Requires(post):   %{_sbindir}/alternatives
 # in version 1.7 and higher for --family switch
@@ -779,36 +779,36 @@ Requires(postun): %{_sbindir}/alternatives
 Requires(postun):   chkconfig >= 1.7
 
 # Standard JPackage devel provides.
-Provides: java-sdk-%{javaver}-%{origin}%{?1} = %{epoch}:%{version}
-Provides: java-sdk-%{javaver}%{?1} = %{epoch}:%{version}
-#Provides: java-sdk-%{origin}%{?1} = %{epoch}:%{version}
-#Provides: java-sdk%{?1} = %{epoch}:%{javaver}
-Provides: java-%{javaver}-devel%{?1} = %{epoch}:%{version}
-#Provides: java-devel-%{origin}%{?1} = %{epoch}:%{version}
-#Provides: java-devel%{?1} = %{epoch}:%{javaver}
+Provides: java-sdk-%{javaver}-%{origin}%{?1} = %{version}
+Provides: java-sdk-%{javaver}%{?1} = %{version}
+#Provides: java-sdk-%{origin}%{?1} = %{version}
+#Provides: java-sdk%{?1} = %{javaver}
+Provides: java-%{javaver}-devel%{?1} = %{version}
+#Provides: java-devel-%{origin}%{?1} = %{version}
+#Provides: java-devel%{?1} = %{javaver}
 
 }
 
 %define java_jmods_rpo() %{expand:
 # Require devel package.
 # as jmods are bytecode, they shouldbe ok without any _isa
-Requires:         %{name}-devel%{?1} = %{epoch}:%{version}-%{release}
-OrderWithRequires: %{name}-headless%{?1} = %{epoch}:%{version}-%{release}
+Requires:         %{name}-devel%{?1} = %{version}-%{release}
+OrderWithRequires: %{name}-headless%{?1} = %{version}-%{release}
 
-Provides: java-%{javaver}-%{origin}-jmods = %{epoch}:%{version}-%{release}
+Provides: java-%{javaver}-%{origin}-jmods = %{version}-%{release}
 
 }
 
 %define java_demo_rpo() %{expand:
-Requires: %{name}%{?1}%{?_isa} = %{epoch}:%{version}-%{release}
-OrderWithRequires: %{name}-headless%{?1}%{?_isa} = %{epoch}:%{version}-%{release}
+Requires: %{name}%{?1}%{?_isa} = %{version}-%{release}
+OrderWithRequires: %{name}-headless%{?1}%{?_isa} = %{version}-%{release}
 
-Provides: java-%{javaver}-%{origin}-demo = %{epoch}:%{version}-%{release}
+Provides: java-%{javaver}-%{origin}-demo = %{version}-%{release}
 
 }
 
 %define java_javadoc_rpo() %{expand:
-OrderWithRequires: %{name}-headless%{?1}%{?_isa} = %{epoch}:%{version}-%{release}
+OrderWithRequires: %{name}-headless%{?1}%{?_isa} = %{version}-%{release}
 # Post requires alternatives to install javadoc alternative.
 Requires(post):   %{_sbindir}/alternatives
 # in version 1.7 and higher for --family switch
@@ -819,27 +819,27 @@ Requires(postun): %{_sbindir}/alternatives
 Requires(postun):   chkconfig >= 1.7
 
 # Standard JPackage javadoc provides.
-Provides: java-javadoc%{?1} = %{epoch}:%{version}-%{release}
-Provides: java-%{javaver}-javadoc%{?1} = %{epoch}:%{version}-%{release}
-Provides: java-%{javaver}-%{origin}-javadoc = %{epoch}:%{version}-%{release}
+Provides: java-javadoc%{?1} = %{version}-%{release}
+Provides: java-%{javaver}-javadoc%{?1} = %{version}-%{release}
+Provides: java-%{javaver}-%{origin}-javadoc = %{version}-%{release}
 
 }
 
 %define java_src_rpo() %{expand:
-Requires: %{name}-headless%{?1}%{?_isa} = %{epoch}:%{version}-%{release}
+Requires: %{name}-headless%{?1}%{?_isa} = %{version}-%{release}
 
 # Standard JPackage javadoc provides.
-Provides: java-src%{?1} = %{epoch}:%{version}-%{release}
-Provides: java-%{javaver}-src%{?1} = %{epoch}:%{version}-%{release}
-Provides: java-%{javaver}-%{origin}-src = %{epoch}:%{version}-%{release}
+Provides: java-src%{?1} = %{version}-%{release}
+Provides: java-%{javaver}-src%{?1} = %{version}-%{release}
+Provides: java-%{javaver}-%{origin}-src = %{version}-%{release}
 }
 
 %define java_accessibility_rpo() %{expand:
 Requires: java-atk-wrapper%{?_isa}
-Requires: %{name}%{?1}%{?_isa} = %{epoch}:%{version}-%{release}
-OrderWithRequires: %{name}-headless%{?1}%{?_isa} = %{epoch}:%{version}-%{release}
+Requires: %{name}%{?1}%{?_isa} = %{version}-%{release}
+OrderWithRequires: %{name}-headless%{?1}%{?_isa} = %{version}-%{release}
 
-Provides: java-%{javaver}-%{origin}-accessiblity = %{epoch}:%{version}-%{release}
+Provides: java-%{javaver}-%{origin}-accessiblity = %{version}-%{release}
 }
 
 # Prevent brp-java-repack-jars from being run.
