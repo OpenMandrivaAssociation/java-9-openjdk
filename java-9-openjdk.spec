@@ -659,7 +659,7 @@ exit 0
 %{_mandir}/man1/wsimport-%{uniquesuffix -- %{?1}}.1*
 %{_mandir}/man1/xjc-%{uniquesuffix -- %{?1}}.1*
 %if %{with_systemtap}
-%{tapsetroot}
+%{tapsetroot}/*/*
 %endif
 }
 
@@ -728,7 +728,7 @@ Requires: javapackages-tools
 # Require zoneinfo data provided by tzdata-java subpackage.
 Requires: tzdata-java >= 2015d
 # libsctp.so.1 is being `dlopen`ed on demand
-Requires: lksctp-tools%{?_isa}
+Requires: %{_lib}sctp1%{?_isa}
 # there is a need to depend on the exact version of NSS
 Requires: nss%{?_isa} %{NSS_BUILDTIME_VERSION}
 # Post requires alternatives to install tool alternatives.
@@ -847,7 +847,7 @@ Provides: java-%{javaver}-%{origin}-accessiblity = %{version}-%{release}
 
 Name:    java-%{majorver}-%{origin}
 Version: %{newjavaver}.%{buildver}
-Release: 6%{?dist}
+Release: 1
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -1660,7 +1660,6 @@ done
 
 %postun javadoc-zip
 %{postun_javadoc_zip %{nil}}
-%endif
 
 %if %{include_debug_build} 
 %post debug
