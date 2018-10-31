@@ -145,6 +145,7 @@
 # Standard JPackage naming and versioning defines.
 %global origin          openjdk
 %global minorver        0
+# Current buildver can be found at http://hg.openjdk.java.net/jdk-updates/jdk9u/
 %global buildver        12
 # priority must be 7 digits in total
 #setting to 1, so debug ones can have 0
