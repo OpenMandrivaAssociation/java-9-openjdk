@@ -848,7 +848,7 @@ Provides: java-%{javaver}-%{origin}-accessiblity = %{version}-%{release}
 
 Name:    java-%{majorver}-%{origin}
 Version: %{newjavaver}.%{buildver}
-Release: 1
+Release: 2
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -1380,10 +1380,6 @@ export JAVA_HOME=$(pwd)/%{buildoutputdir $suffix}/images/%{jdkimage}
 
 # Install nss.cfg right away as we will be using the JRE above
 install -m 644 nss.cfg $JAVA_HOME/conf/security/
-
-# Use system-wide tzdata
-rm $JAVA_HOME/lib/tzdb.dat
-ln -s %{_datadir}/javazi-1.8/tzdb.dat $JAVA_HOME/lib/tzdb.dat
 
 #build cycles
 done
