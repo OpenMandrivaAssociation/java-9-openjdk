@@ -919,7 +919,8 @@ Patch102: java-1.9.0-openjdk-size_t.patch
 Patch103: hotspot-min-max-macros.patch
 Patch104: bootcycle_jobs.patch
 
-Patch200: openjdk-9-clang.patch
+Patch200: openjdk-9-fixes.patch
+Patch201: openjdk-9-clang.patch
 
 #Patch300: jstack-pr1845.patch
 
@@ -1224,7 +1225,10 @@ pushd openjdk
 #%patch103 -p1
 %patch104 -p1
 
-%patch200 -p1 -b .clang~
+%patch200 -p1 -b .fixes~
+%if 0
+%patch201 -p1 -b .clang~
+%endif
 
 # Zero PPC fixes.
 #  TODO: propose them upstream

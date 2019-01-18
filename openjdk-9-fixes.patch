@@ -1,0 +1,24 @@
+diff -up openjdk/hotspot/src/os_cpu/linux_arm/vm/orderAccess_linux_arm.inline.hpp.clang~ openjdk/hotspot/src/os_cpu/linux_arm/vm/orderAccess_linux_arm.inline.hpp
+--- openjdk/hotspot/src/os_cpu/linux_arm/vm/orderAccess_linux_arm.inline.hpp.clang~	2018-08-01 13:29:51.000000000 +0200
++++ openjdk/hotspot/src/os_cpu/linux_arm/vm/orderAccess_linux_arm.inline.hpp	2019-01-18 05:46:25.033985288 +0100
+@@ -61,7 +61,7 @@ inline static void dmb_sy() {
+    if (!os::is_MP()) {
+      return;
+    }
+-#ifdef AARCH64
++#if defined(AARCH64) || defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7S__) || defined(__ARM_ARCH_8__) || defined(__ARM_ARCH_8A__)
+    __asm__ __volatile__ ("dmb sy" : : : "memory");
+ #else
+    if (VM_Version::arm_arch() >= 7) {
+diff -up openjdk/hotspot/src/share/vm/compiler/methodMatcher.cpp.omv~ openjdk/hotspot/src/share/vm/compiler/methodMatcher.cpp
+--- openjdk/hotspot/src/share/vm/compiler/methodMatcher.cpp.omv~	2019-01-18 16:08:21.041525623 +0100
++++ openjdk/hotspot/src/share/vm/compiler/methodMatcher.cpp	2019-01-18 16:09:55.616920076 +0100
+@@ -96,7 +96,7 @@ bool MethodMatcher::canonicalize(char *
+   bool have_colon = (colon != NULL);
+   if (have_colon) {
+     // Don't allow multiple '::'
+-    if (colon + 2 != '\0') {
++    if (colon[2] != '\0') {
+       if (strstr(colon+2, "::")) {
+         error_msg = "Method pattern only allows one '::' allowed";
+         return false;
