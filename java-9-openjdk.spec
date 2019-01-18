@@ -1304,9 +1304,9 @@ EXTRA_CPP_FLAGS="-Wno-error"
 EXTRA_CFLAGS="$EXTRA_CFLAGS -fno-strict-aliasing"
 %endif
 
-%if 0%{?fedora} > 23
-EXTRA_CFLAGS="$EXTRA_CFLAGS -Wno-error -std=gnu++98  -fno-delete-null-pointer-checks -fno-lifetime-dse -fpermissive"
-EXTRA_CPP_FLAGS="$EXTRA_CPP_FLAGS -Wno-error -std=gnu++98 -fno-delete-null-pointer-checks -fno-lifetime-dse"
+%ifarch %{arm}
+EXTRA_CFLAGS="$EXTRA_CFLAGS -Wno-error -std=gnu++98  -fno-delete-null-pointer-checks -fno-lifetime-dse -fpermissive -O2"
+EXTRA_CPP_FLAGS="$EXTRA_CPP_FLAGS -Wno-error -std=gnu++98 -fno-delete-null-pointer-checks -fno-lifetime-dse -O2"
 %endif
 
 %ifarch %{ix86}
@@ -1329,9 +1329,6 @@ mkdir -p %{buildoutputdir -- $suffix}
 pushd %{buildoutputdir -- $suffix}
 
 bash ../configure \
-%ifarch %{arm}
-    --with-toolchain-type=clang \
-%endif
 %ifnarch %{jit_arches}
     --with-jvm-variants=zero \
 %endif
