@@ -184,3 +184,15 @@ diff -up openjdk/hotspot/src/share/vm/utilities/vmError.cpp.clang~ openjdk/hotsp
         case OOM_MALLOC_ERROR:
         case OOM_MMAP_ERROR:
           if (_size) {
+diff -up openjdk/hotspot/src/share/vm/opto/lcm.cpp.omv~ openjdk/hotspot/src/share/vm/opto/lcm.cpp
+--- openjdk/hotspot/src/share/vm/opto/lcm.cpp.omv~	2019-01-18 14:07:55.834711523 +0100
++++ openjdk/hotspot/src/share/vm/opto/lcm.cpp	2019-01-18 14:08:24.276110067 +0100
+@@ -39,7 +39,7 @@
+ // Check whether val is not-null-decoded compressed oop,
+ // i.e. will grab into the base of the heap if it represents NULL.
+ static bool accesses_heap_base_zone(Node *val) {
+-  if (Universe::narrow_oop_base() > 0) { // Implies UseCompressedOops.
++  if (Universe::narrow_oop_base()) { // Implies UseCompressedOops.
+     if (val && val->is_Mach()) {
+       if (val->as_Mach()->ideal_Opcode() == Op_DecodeN) {
+         // This assumes all Decodes with TypePtr::NotNull are matched to nodes that
