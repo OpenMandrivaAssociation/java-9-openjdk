@@ -1,0 +1,186 @@
+diff -up openjdk/hotspot/src/cpu/arm/vm/icache_arm.cpp.clang~ openjdk/hotspot/src/cpu/arm/vm/icache_arm.cpp
+--- openjdk/hotspot/src/cpu/arm/vm/icache_arm.cpp.clang~	2018-08-01 13:29:50.000000000 +0200
++++ openjdk/hotspot/src/cpu/arm/vm/icache_arm.cpp	2019-01-18 05:46:25.032985273 +0100
+@@ -67,7 +67,7 @@ static int icache_flush(address addr, in
+ #else
+ 
+ static int icache_flush(address addr, int lines, int magic) {
+-  __builtin___clear_cache(addr, addr + (lines << ICache::log2_line_size));
++  __builtin___clear_cache(reinterpret_cast<char*>(addr), reinterpret_cast<char*>(addr) + (lines << ICache::log2_line_size));
+   return magic;
+ }
+ 
+diff -up openjdk/hotspot/src/os_cpu/linux_arm/vm/linux_arm_32.s.clang~ openjdk/hotspot/src/os_cpu/linux_arm/vm/linux_arm_32.s
+--- openjdk/hotspot/src/os_cpu/linux_arm/vm/linux_arm_32.s.clang~	2018-08-01 13:29:51.000000000 +0200
++++ openjdk/hotspot/src/os_cpu/linux_arm/vm/linux_arm_32.s	2019-01-18 05:46:25.033985288 +0100
+@@ -91,7 +91,7 @@ dw_f2b_loop_32:
+         stmia r0!, {r3 - r9, ip}
+         bgt     dw_f2b_loop_32
+ dw_f2b_loop_32_finish:
+-        addlts  r2, #32
++        addslt  r2, #32
+         beq     disjoint_words_finish
+         cmp     r2, #16
+ 	blt	disjoint_words_small
+@@ -139,7 +139,7 @@ cw_f2b_loop_32:
+         stmia r0!, {r3 - r9, ip}
+         bgt     cw_f2b_loop_32
+ cw_f2b_loop_32_finish:
+-        addlts  r2, #32
++        addslt  r2, #32
+         beq     conjoint_words_finish
+         cmp     r2, #16
+ 	blt	conjoint_words_small
+@@ -172,7 +172,7 @@ cw_b2f_loop_32:
+         stmdb r0!, {r3-r9,ip}
+         bgt     cw_b2f_loop_32
+ cw_b2f_loop_32_finish:
+-        addlts  r2, #32
++        addslt  r2, #32
+         beq     conjoint_words_finish
+         cmp     r2, #16
+ 	blt	cw_b2f_copy_small
+@@ -224,7 +224,7 @@ cs_f2b_loop_32:
+         stmia r0!, {r3 - r9, ip}
+         bgt     cs_f2b_loop_32
+ cs_f2b_loop_32_finish:
+-        addlts  r2, #32
++        addslt  r2, #32
+         beq     conjoint_shorts_finish
+         movs    r6, r2, lsr #3
+         .align 3
+@@ -240,11 +240,11 @@ cs_f2b_4:
+         beq     conjoint_shorts_finish
+         cmp     r2, #4
+         ldrh    r3, [r1], #2
+-        ldrgeh  r4, [r1], #2
+-        ldrgth  r5, [r1], #2
++        ldrhge  r4, [r1], #2
++        ldrhgt  r5, [r1], #2
+         strh    r3, [r0], #2
+-        strgeh  r4, [r0], #2
+-        strgth  r5, [r0], #2
++        strhge  r4, [r0], #2
++        strhgt  r5, [r0], #2
+         b       conjoint_shorts_finish
+ 
+ 	# Destination not aligned
+@@ -302,11 +302,11 @@ cs_f2b_4_u:
+         beq     conjoint_shorts_finish
+         cmp     r2, #4
+         ldrh    r3, [r1], #2
+-        ldrgeh  r4, [r1], #2
+-        ldrgth  r5, [r1], #2
++        ldrhge  r4, [r1], #2
++        ldrhgt  r5, [r1], #2
+         strh    r3, [r0], #2
+-        strgeh  r4, [r0], #2
+-        strgth  r5, [r0], #2
++        strhge  r4, [r0], #2
++        strhgt  r5, [r0], #2
+         b       conjoint_shorts_finish
+ 
+ 	# Src and dest overlap, copy in a descending order
+@@ -329,7 +329,7 @@ cs_b2f_loop_32:
+         stmdb r0!, {r3-r9,ip}
+         bgt     cs_b2f_loop_32
+ cs_b2f_loop_32_finish:
+-        addlts  r2, #32
++        addslt  r2, #32
+         beq     conjoint_shorts_finish
+         cmp     r2, #24
+         blt     cs_b2f_16
+@@ -355,11 +355,11 @@ cs_b2f_8:
+ cs_b2f_all_copy:
+         cmp     r2, #4
+         ldrh    r3, [r1, #-2]!
+-        ldrgeh  r4, [r1, #-2]!
+-        ldrgth  r5, [r1, #-2]!
++        ldrhge  r4, [r1, #-2]!
++        ldrhgt  r5, [r1, #-2]!
+         strh    r3, [r0, #-2]!
+-        strgeh  r4, [r0, #-2]!
+-        strgth  r5, [r0, #-2]!
++        strhge  r4, [r0, #-2]!
++        strhgt  r5, [r0, #-2]!
+         b       conjoint_shorts_finish
+ 
+ 	# Destination not aligned
+@@ -394,7 +394,7 @@ cs_b2f_16_loop_u:
+         bgt     cs_b2f_16_loop_u
+         beq     conjoint_shorts_finish
+ cs_b2f_16_loop_u_finished:
+-        addlts  r2, #16
++        addslt  r2, #16
+         ldr     r3, [r1]
+ 	cmp     r2, #10
+         blt     cs_b2f_2_u_loop
+@@ -457,7 +457,7 @@ cl_f2b_loop_32:
+         stmia r0!, {r3 - r9, ip}
+         bgt     cl_f2b_loop_32
+ cl_f2b_loop_32_finish:
+-        addlts  r2, #32
++        addslt  r2, #32
+         beq     conjoint_longs_finish
+ conjoint_longs_small:
+         cmp     r2, #16
+@@ -490,7 +490,7 @@ cl_b2f_loop_32:
+         stmdb 	r0!, {r3 - r9, ip}
+         bgt     cl_b2f_loop_32
+ cl_b2f_loop_32_finish:
+-        addlts  r2, #32
++        addslt  r2, #32
+         beq     conjoint_longs_finish
+         cmp     r2, #16
+ 	blt	cl_b2f_copy_8
+diff -up openjdk/hotspot/src/os_cpu/linux_arm/vm/orderAccess_linux_arm.inline.hpp.clang~ openjdk/hotspot/src/os_cpu/linux_arm/vm/orderAccess_linux_arm.inline.hpp
+--- openjdk/hotspot/src/os_cpu/linux_arm/vm/orderAccess_linux_arm.inline.hpp.clang~	2018-08-01 13:29:51.000000000 +0200
++++ openjdk/hotspot/src/os_cpu/linux_arm/vm/orderAccess_linux_arm.inline.hpp	2019-01-18 05:46:25.033985288 +0100
+@@ -61,7 +61,7 @@ inline static void dmb_sy() {
+    if (!os::is_MP()) {
+      return;
+    }
+-#ifdef AARCH64
++#if defined(AARCH64) || defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7S__) || defined(__ARM_ARCH_8__) || defined(__ARM_ARCH_8A__)
+    __asm__ __volatile__ ("dmb sy" : : : "memory");
+ #else
+    if (VM_Version::arm_arch() >= 7) {
+diff -up openjdk/hotspot/src/os_cpu/linux_arm/vm/os_linux_arm.cpp.clang~ openjdk/hotspot/src/os_cpu/linux_arm/vm/os_linux_arm.cpp
+--- openjdk/hotspot/src/os_cpu/linux_arm/vm/os_linux_arm.cpp.clang~	2018-08-01 13:29:51.000000000 +0200
++++ openjdk/hotspot/src/os_cpu/linux_arm/vm/os_linux_arm.cpp	2019-01-18 05:46:25.033985288 +0100
+@@ -511,8 +511,8 @@ void os::setup_fpu() {
+ #if !defined(__SOFTFP__) && defined(__VFP_FP__)
+   // Turn on IEEE-754 compliant VFP mode
+   __asm__ volatile (
+-    "mov %%r0, #0;"
+-    "fmxr fpscr, %%r0"
++    "mov r0, #0;"
++    "fmxr fpscr, r0"
+     : /* no output */ : /* no input */ : "r0"
+   );
+ #endif
+diff -up openjdk/hotspot/src/os/linux/vm/os_linux.cpp.clang~ openjdk/hotspot/src/os/linux/vm/os_linux.cpp
+diff -up openjdk/hotspot/src/share/vm/code/compiledIC.cpp.clang~ openjdk/hotspot/src/share/vm/code/compiledIC.cpp
+--- openjdk/hotspot/src/share/vm/code/compiledIC.cpp.clang~	2018-08-01 13:29:51.000000000 +0200
++++ openjdk/hotspot/src/share/vm/code/compiledIC.cpp	2019-01-18 05:46:25.032985273 +0100
+@@ -224,7 +224,7 @@ bool CompiledIC::set_to_megamorphic(Call
+     assert(bytecode == Bytecodes::_invokeinterface, "");
+     int itable_index = call_info->itable_index();
+     entry = VtableStubs::find_itable_stub(itable_index);
+-    if (entry == false) {
++    if (!entry) {
+       return false;
+     }
+ #ifdef ASSERT
+diff -up openjdk/hotspot/src/share/vm/utilities/vmError.cpp.clang~ openjdk/hotspot/src/share/vm/utilities/vmError.cpp
+--- openjdk/hotspot/src/share/vm/utilities/vmError.cpp.clang~	2018-08-01 13:29:51.000000000 +0200
++++ openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2019-01-18 05:46:25.033985288 +0100
+@@ -375,7 +375,7 @@ void VMError::report(outputStream* st, b
+ 
+   STEP("printing type of error")
+ 
+-     switch(_id) {
++     switch(static_cast<unsigned int>(_id)) {
+        case OOM_MALLOC_ERROR:
+        case OOM_MMAP_ERROR:
+          if (_size) {

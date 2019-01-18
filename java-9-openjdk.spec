@@ -848,7 +848,7 @@ Provides: java-%{javaver}-%{origin}-accessiblity = %{version}-%{release}
 
 Name:    java-%{majorver}-%{origin}
 Version: %{newjavaver}.%{buildver}
-Release: 3
+Release: 4
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -918,6 +918,8 @@ Patch101: sorted-diff.patch
 Patch102: java-1.9.0-openjdk-size_t.patch
 Patch103: hotspot-min-max-macros.patch
 Patch104: bootcycle_jobs.patch
+
+Patch200: openjdk-9-clang.patch
 
 #Patch300: jstack-pr1845.patch
 
@@ -1222,6 +1224,8 @@ pushd openjdk
 #%patch103 -p1
 %patch104 -p1
 
+%patch200 -p1 -b .clang~
+
 # Zero PPC fixes.
 #  TODO: propose them upstream
 %patch400 -p1
@@ -1325,6 +1329,9 @@ mkdir -p %{buildoutputdir -- $suffix}
 pushd %{buildoutputdir -- $suffix}
 
 bash ../configure \
+%ifarch %{arm}
+    --with-toolchain-type=clang \
+%endif
 %ifnarch %{jit_arches}
     --with-jvm-variants=zero \
 %endif
