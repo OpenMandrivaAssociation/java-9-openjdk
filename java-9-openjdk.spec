@@ -863,7 +863,7 @@ Summary: OpenJDK Runtime Environment
 Group:   Development/Languages
 
 License:  ASL 1.1 and ASL 2.0 and GPL+ and GPLv2 and GPLv2 with exceptions and LGPL+ and LGPLv2 and MPLv1.0 and MPLv1.1 and Public Domain and W3C
-URL:      http://openjdk.java.net/
+URL:      https://openjdk.java.net/
 
 # Source from upstrem OpenJDK9 project. To regenerate, use
 # PROJECT_NAME=jdk-updates REPO_NAME=jdk9u VERSION=jdk-%%{majorver}.%%{minorver}.%%{securityver}+%%{buildver} ./generate_source_tarball.sh
